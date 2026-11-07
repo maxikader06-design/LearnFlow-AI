@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LearnFlow AI</title>
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  background: #0b1220;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+header {
+  padding: 20px;
+  background: #172741;
+  border-radius: 15px;
+  text-align: center;
+}
+h1 { color: #8b9cff; }
+.card {
+  background: #172741;
+  padding: 20px;
+  margin-top: 18px;
+  border-radius: 15px;
+}
+button {
+  background: #8b9cff;
+  color: #101827;
+  border: 0;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5px;
+}
+p { color: #bdc9dd; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>LearnFlow AI 🧠</h1>
+  <p>مدرّبك الشخصي للتعلّم الذكي</p>
+</header>
+
+<div class="card">
+  <h2>مرحبًا بك!</h2>
+  <p>تعلّم بذكاء، وليس لساعات أطول.</p>
+  <p>اكتشف نقاط ضعفك، اختبر معلوماتك، وطوّر مستواك كل يوم.</p>
+</div>
+
+<div class="card">
+  <h2>📚 البطاقات التعليمية</h2>
+  <p id="question">ما المقصود بالاسترجاع النشط؟</p>
+  <button onclick="showAnswer()">اكشف الإجابة</button>
+  <p id="answer" hidden>محاولة تذكّر المعلومات من ذاكرتك دون النظر إلى الكتاب.</p>
+</div>
+
+<div class="card">
+  <h2>🎯 اختبر نفسك</h2>
+  <p>ما أفضل طريقة لاختبار فهمك؟</p>
+  <button onclick="check(false)">إعادة قراءة الدرس فقط</button>
+  <button onclick="check(true)">اختبار نفسك دون النظر</button>
+  <p id="result"></p>
+</div>
+
+<div class="card">
+  <h2>🚀 هدفنا القادم</h2>
+  <p>إضافة مساعد ذكاء اصطناعي، ومراجعة متباعدة، وتذكيرات ذكية.</p>
+</div>
+
+<script>
+function showAnswer() {
+  document.getElementById("answer").hidden = false;
+}
+function check(correct) {
+  document.getElementById("result").textContent =
+    correct ? "إجابة صحيحة! أحسنت 🎉" : "حاول مرة أخرى!";
+}
+</script>
+
+</body>
+  </html>
