@@ -197,8 +197,7 @@ async function askAI(userText, buttonId) {
       throw new Error("انتهت الجلسة. سجّل الدخول مرة أخرى.");
     }
     if (!response.ok) {
-      throw new Error(data.error || data.message || "حدث خطأ أثناء طلب الإجابة.");
-    }
+      throw new Error(`${data.error || data.message || "حدث خطأ"} | HTTP: ${data.status || response.status} | Details: ${data.details || "لا توجد تفاصيل"}`);
     const reply = data.reply || data.message;
     if (!reply) throw new Error("وصل رد غير متوقع من الخادم.");
     chatHistory.push({role:"assistant", content:reply});
