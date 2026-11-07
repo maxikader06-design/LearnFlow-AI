@@ -5,45 +5,259 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#090909">
 <title>KEDIR LEARNFLOW</title>
+
 <style>
-:root{--yellow:#FFD600;--black:#090909;--card:#151515;--muted:#999;--white:#fff}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:var(--black);color:var(--white);font-family:Arial,sans-serif;overflow-x:hidden}
-body:before{content:"";position:fixed;width:320px;height:320px;border-radius:50%;background:var(--yellow);filter:blur(130px);opacity:.12;top:8%;left:-140px;pointer-events:none}
-body:after{content:"";position:fixed;width:240px;height:240px;border-radius:50%;background:#ffb700;filter:blur(120px);opacity:.1;bottom:0;right:-100px;pointer-events:none}
-.container{width:min(100% - 30px,850px);margin:auto;position:relative;z-index:1}
-nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
-.logo{font-size:19px;font-weight:900;letter-spacing:1px}.logo span{color:var(--yellow)}
-.lang{border:1px solid #383838;background:#171717;color:#fff;padding:10px 15px;border-radius:30px}
-.hero{text-align:center;padding:45px 12px 35px}
-.orb{width:92px;height:92px;margin:0 auto 25px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7a5,#FFD600 35%,#d49b00 70%,#533b00);box-shadow:0 0 40px #ffd60055,0 0 100px #ffd60022;animation:float 4s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-12px)}}
-.eyebrow{color:var(--yellow);font-size:12px;letter-spacing:3px;font-weight:bold}
-h1{font-size:clamp(34px,8vw,56px);margin:15px 0;font-weight:900}h1 span{color:var(--yellow)}
-.hero p{color:#aaa;line-height:1.9;max-width:540px;margin:auto}
-.card{background:linear-gradient(145deg,#191919,#101010);border:1px solid #292929;border-radius:20px;padding:23px;margin-bottom:18px;box-shadow:0 12px 35px #0005}
-.card h2{margin-top:0}
-label{display:block;margin:16px 0 8px;color:#ddd;font-size:14px}
-input,textarea{width:100%;padding:14px;background:#090909;color:#fff;border:1px solid #363636;border-radius:11px;font-size:15px;outline:none;font-family:inherit}
-textarea{min-height:130px;resize:vertical;line-height:1.7}
-input:focus,textarea:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffd60018}
-button{font-size:15px;font-weight:bold;border:0;cursor:pointer}
-.primary{width:100%;padding:15px;margin-top:18px;border-radius:12px;background:var(--yellow);color:#090909}
-.primary:disabled{opacity:.55;cursor:wait}
-.secondary{background:#252525;color:#fff;padding:11px 14px;border-radius:10px}
-.small{color:#888;font-size:12px;line-height:1.7}
-.status{margin-top:12px;min-height:20px;color:#bbb;font-size:13px;line-height:1.6}
-.chat{background:#0c0c0c;border:1px solid #292929;border-radius:13px;padding:14px;min-height:100px;max-height:420px;overflow-y:auto;margin-top:14px}
-.bubble{padding:12px 14px;border-radius:12px;margin:9px 0;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
-.user{background:#28230a;border:1px solid #655500}
-.ai{background:#1b1b1b;border:1px solid #333}
-.hidden{display:none!important}
-footer{text-align:center;padding:30px 0;color:#666;font-size:12px}
-@media(max-width:480px){.hero{padding-top:35px}.card{padding:18px}}
+:root {
+  --yellow:#FFD600;
+  --black:#090909;
+  --card:#151515;
+  --muted:#999;
+  --white:#fff;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  background:var(--black);
+  color:var(--white);
+  font-family:Arial,sans-serif;
+  overflow-x:hidden;
+}
+
+body:before {
+  content:"";
+  position:fixed;
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  background:var(--yellow);
+  filter:blur(130px);
+  opacity:.12;
+  top:8%;
+  left:-140px;
+  pointer-events:none;
+}
+
+body:after {
+  content:"";
+  position:fixed;
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background:#ffb700;
+  filter:blur(120px);
+  opacity:.1;
+  bottom:0;
+  right:-100px;
+  pointer-events:none;
+}
+
+.container {
+  width:min(100% - 30px,850px);
+  margin:auto;
+  position:relative;
+  z-index:1;
+}
+
+nav {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:22px 0;
+}
+
+.logo {
+  font-size:19px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.logo span { color:var(--yellow); }
+
+.lang {
+  border:1px solid #383838;
+  background:#171717;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:30px;
+}
+
+.hero {
+  text-align:center;
+  padding:45px 12px 35px;
+}
+
+.orb {
+  width:92px;
+  height:92px;
+  margin:0 auto 25px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff7a5,#FFD600 35%,#d49b00 70%,#533b00);
+  box-shadow:0 0 40px #ffd60055,0 0 100px #ffd60022;
+  animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  50% { transform:translateY(-12px); }
+}
+
+.eyebrow {
+  color:var(--yellow);
+  font-size:12px;
+  letter-spacing:3px;
+  font-weight:bold;
+}
+
+h1 {
+  font-size:clamp(34px,8vw,56px);
+  margin:15px 0;
+  font-weight:900;
+}
+
+h1 span { color:var(--yellow); }
+
+.hero p {
+  color:#aaa;
+  line-height:1.9;
+  max-width:540px;
+  margin:auto;
+}
+
+.card {
+  background:linear-gradient(145deg,#191919,#101010);
+  border:1px solid #292929;
+  border-radius:20px;
+  padding:23px;
+  margin-bottom:18px;
+  box-shadow:0 12px 35px #0005;
+}
+
+.card h2 { margin-top:0; }
+
+label {
+  display:block;
+  margin:16px 0 8px;
+  color:#ddd;
+  font-size:14px;
+}
+
+input,textarea {
+  width:100%;
+  padding:14px;
+  background:#090909;
+  color:#fff;
+  border:1px solid #363636;
+  border-radius:11px;
+  font-size:15px;
+  outline:none;
+  font-family:inherit;
+}
+
+textarea {
+  min-height:130px;
+  resize:vertical;
+  line-height:1.7;
+}
+
+input:focus,textarea:focus {
+  border-color:var(--yellow);
+  box-shadow:0 0 0 3px #ffd60018;
+}
+
+button {
+  font-size:15px;
+  font-weight:bold;
+  border:0;
+  cursor:pointer;
+}
+
+.primary {
+  width:100%;
+  padding:15px;
+  margin-top:18px;
+  border-radius:12px;
+  background:var(--yellow);
+  color:#090909;
+}
+
+.primary:disabled {
+  opacity:.55;
+  cursor:wait;
+}
+
+.secondary {
+  background:#252525;
+  color:#fff;
+  padding:11px 14px;
+  border-radius:10px;
+}
+
+.small {
+  color:#888;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.status {
+  margin-top:12px;
+  min-height:20px;
+  color:#bbb;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.chat {
+  background:#0c0c0c;
+  border:1px solid #292929;
+  border-radius:13px;
+  padding:14px;
+  min-height:100px;
+  max-height:420px;
+  overflow-y:auto;
+  margin-top:14px;
+}
+
+.bubble {
+  padding:12px 14px;
+  border-radius:12px;
+  margin:9px 0;
+  line-height:1.75;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.user {
+  background:#28230a;
+  border:1px solid #655500;
+}
+
+.ai {
+  background:#1b1b1b;
+  border:1px solid #333;
+}
+
+.hidden { display:none!important; }
+
+footer {
+  text-align:center;
+  padding:30px 0;
+  color:#666;
+  font-size:12px;
+}
+
+@media(max-width:480px) {
+  .hero { padding-top:35px; }
+  .card { padding:18px; }
+}
 </style>
 </head>
+
 <body>
+
 <div class="container">
+
 <nav>
   <div class="logo">KEDIR <span>LEARNFLOW.</span></div>
   <button class="lang" id="langBtn" onclick="toggleLanguage()">English</button>
@@ -58,61 +272,115 @@ footer{text-align:center;padding:30px 0;color:#666;font-size:12px}
 
 <section class="card" id="loginCard">
   <h2>✦ تسجيل الدخول</h2>
-  <p class="small">أدخل كلمة مرور التطبيق التي أعددتها في Cloudflare. لا تضع مفتاح Groq API هنا.</p>
+  <p class="small">
+    أدخل كلمة مرور التطبيق التي أعددتها في Cloudflare.
+    لا تضع مفتاح Groq API هنا.
+  </p>
+
   <label for="appPassword">كلمة مرور التطبيق</label>
-  <input id="appPassword" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور">
-  <button class="primary" id="loginBtn" onclick="connectAI()">اتصال آمن</button>
+  <input
+    id="appPassword"
+    type="password"
+    autocomplete="current-password"
+    placeholder="أدخل كلمة المرور"
+  >
+
+  <button class="primary" id="loginBtn" onclick="connectAI()">
+    اتصال آمن
+  </button>
+
   <p class="status" id="loginStatus">غير متصل حالياً.</p>
 </section>
 
 <section class="card hidden" id="tutorCard">
+
   <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
     <h2 style="margin:0">✦ مدرّبك الذكي</h2>
     <button class="secondary" onclick="disconnectAI()">تسجيل الخروج</button>
   </div>
-  <p class="small">أرسل ملخص درس أو نص فيديو. سيشرحه لك الذكاء الاصطناعي ثم يختبر فهمك بأسئلة تفاعلية.</p>
+
+  <p class="small">
+    أرسل ملخص درس أو نص فيديو. سيشرحه لك الذكاء الاصطناعي
+    ثم يختبر فهمك بأسئلة تفاعلية.
+  </p>
+
   <label for="lessonText">الدرس أو ملخص الفيديو</label>
-  <textarea id="lessonText" placeholder="الصق هنا نص الدرس أو ملخص الفيديو..."></textarea>
-  <button class="primary" id="analyzeBtn" onclick="analyzeLesson()">حلّل الدرس وابدأ تدريبي</button>
+  <textarea
+    id="lessonText"
+    placeholder="الصق هنا نص الدرس أو ملخص الفيديو..."
+  ></textarea>
+
+  <button class="primary" id="analyzeBtn" onclick="analyzeLesson()">
+    حلّل الدرس وابدأ تدريبي
+  </button>
+
   <div class="chat" id="chatBox" aria-live="polite">
-    <p class="small" id="welcomeText">ستظهر المحادثة هنا بعد إرسال الدرس أو سؤالك.</p>
+    <p class="small" id="welcomeText">
+      ستظهر المحادثة هنا بعد إرسال الدرس أو سؤالك.
+    </p>
   </div>
+
   <label for="questionInput">اكتب سؤالك أو إجابتك</label>
   <input id="questionInput" placeholder="اكتب هنا...">
-  <button class="primary" id="sendBtn" onclick="sendQuestion()">إرسال</button>
+
+  <button class="primary" id="sendBtn" onclick="sendQuestion()">
+    إرسال
+  </button>
+
   <p class="status" id="chatStatus"></p>
 </section>
 
 <section class="card">
   <h2>✦ طريقة التعلّم</h2>
-  <p class="small" style="line-height:2">1. سجّل الدخول بكلمة مرور التطبيق.<br>2. الصق الدرس أو ملخص الفيديو.<br>3. اطلب من المدرّب شرحه واختبار فهمك.<br>4. أجب عن الأسئلة واطلب توضيح ما لم تفهمه.</p>
+  <p class="small" style="line-height:2">
+    1. سجّل الدخول بكلمة مرور التطبيق.<br>
+    2. الصق الدرس أو ملخص الفيديو.<br>
+    3. اطلب من المدرّب شرحه واختبار فهمك.<br>
+    4. أجب عن الأسئلة واطلب توضيح ما لم تفهمه.
+  </p>
 </section>
 
-<footer>KEDIR LEARNFLOW © 2026<br><br>LEARN SMARTER. REMEMBER LONGER.</footer>
+<footer>
+  KEDIR LEARNFLOW © 2026
+  <br><br>
+  LEARN SMARTER. REMEMBER LONGER.
+</footer>
+
 </div>
 
 <script>
+
+"use strict";
+
 const API_URL = "https://kedir-learnflow-api.maxikader06.workers.dev";
+
 let sessionToken = sessionStorage.getItem("lfSessionToken") || "";
 let chatHistory = [];
 let language = "ar";
+
 
 function setStatus(id, message) {
   document.getElementById(id).textContent = message;
 }
 
+
 function addBubble(role, message) {
   const box = document.getElementById("chatBox");
   const bubble = document.createElement("div");
+
   bubble.className = "bubble " + (role === "user" ? "user" : "ai");
   bubble.textContent = message;
+
   box.appendChild(bubble);
   box.scrollTop = box.scrollHeight;
 }
 
+
 function setBusy(buttonId, busy, busyText) {
   const button = document.getElementById(buttonId);
+
   button.disabled = busy;
+
   if (busy) {
     button.dataset.oldText = button.textContent;
     button.textContent = busyText;
@@ -121,8 +389,13 @@ function setBusy(buttonId, busy, busyText) {
   }
 }
 
+
+// LOGIN
+
 async function connectAI() {
+
   const password = document.getElementById("appPassword").value;
+
   if (!password.trim()) {
     setStatus("loginStatus", "أدخل كلمة مرور التطبيق أولاً.");
     return;
@@ -132,118 +405,217 @@ async function connectAI() {
   setStatus("loginStatus", "جارٍ التحقق من كلمة المرور...");
 
   try {
+
     const response = await fetch(API_URL + "/login", {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({password})
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ password })
     });
+
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok || !(data.token || data.access_token || data.sessionToken)) {
-      throw new Error(data.error || data.message || "تعذر تسجيل الدخول. تحقق من كلمة المرور وإعدادات الخادم.");
+      throw new Error(
+        data.error ||
+        data.message ||
+        "تعذر تسجيل الدخول. تحقق من كلمة المرور وإعدادات الخادم."
+      );
     }
 
     sessionToken = data.token || data.access_token || data.sessionToken;
+
     sessionStorage.setItem("lfSessionToken", sessionToken);
+
     document.getElementById("loginCard").classList.add("hidden");
     document.getElementById("tutorCard").classList.remove("hidden");
+
     setStatus("chatStatus", "تم الاتصال. أرسل درسك للبدء.");
+
   } catch (error) {
+
     setStatus("loginStatus", "فشل الاتصال: " + error.message);
+
   } finally {
+
     setBusy("loginBtn", false);
+
   }
 }
 
+
+// LOGOUT
+
 function disconnectAI() {
+
   sessionToken = "";
   chatHistory = [];
+
   sessionStorage.removeItem("lfSessionToken");
+
   document.getElementById("tutorCard").classList.add("hidden");
   document.getElementById("loginCard").classList.remove("hidden");
-  document.getElementById("chatBox").innerHTML = '<p class="small">ستظهر المحادثة هنا بعد إرسال الدرس أو سؤالك.</p>';
+
+  document.getElementById("chatBox").innerHTML =
+    '<p class="small">ستظهر المحادثة هنا بعد إرسال الدرس أو سؤالك.</p>';
+
   setStatus("loginStatus", "تم تسجيل الخروج من هذا الجهاز.");
 }
 
+
+// AI REQUEST
+
 async function askAI(userText, buttonId) {
+
   if (!sessionToken) {
     setStatus("chatStatus", "انتهت الجلسة. سجّل الدخول مرة أخرى.");
     disconnectAI();
     return;
   }
 
-  chatHistory.push({role:"user", content:userText});
+  chatHistory.push({
+    role: "user",
+    content: userText
+  });
+
   const systemMessage = {
-    role:"system",
-    content:"You are KEDIR LEARNFLOW, a patient personal learning coach. The learner may be a beginner. Explain clearly in the same language the learner uses. When given lesson notes or a video summary, identify the key ideas, explain them simply, then ask one question at a time. Wait for the learner's answer, give kind and accurate feedback, correct misunderstandings, and continue with useful questions. Do not invent facts beyond the supplied lesson; say when something is unclear."
+    role: "system",
+    content: "You are KEDIR LEARNFLOW, a patient personal learning coach. The learner may be a beginner. Explain clearly in the same language the learner uses. When given lesson notes or a video summary, identify the key ideas, explain them simply, then ask one question at a time. Wait for the learner's answer, give kind and accurate feedback, correct misunderstandings, and continue with useful questions. Do not invent facts beyond the supplied lesson; say when something is unclear."
   };
 
   setBusy(buttonId, true, "جارٍ التفكير...");
   setStatus("chatStatus", "يراجع المدرّب رسالتك...");
 
   try {
+
     const response = await fetch(API_URL + "/chat", {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":"Bearer " + sessionToken
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + sessionToken
       },
-      body:JSON.stringify({messages:[systemMessage, ...chatHistory.slice(-12)]})
+      body: JSON.stringify({
+        messages: [systemMessage, ...chatHistory.slice(-12)]
+      })
     });
+
     const data = await response.json().catch(() => ({}));
 
     if (response.status === 401) {
       disconnectAI();
       throw new Error("انتهت الجلسة. سجّل الدخول مرة أخرى.");
     }
+
     if (!response.ok) {
-      throw new Error(`${data.error || data.message || "حدث خطأ"} | HTTP: ${data.status || response.status} | Details: ${data.details || "لا توجد تفاصيل"}`);
+      throw new Error(
+        `${data.error || data.message || "حدث خطأ"} | HTTP: ${data.status || response.status} | Details: ${data.details || "لا توجد تفاصيل"}`
+      );
+    }
+
+    // تم إصلاح القوس المفقود هنا
+
     const reply = data.reply || data.message;
-    if (!reply) throw new Error("وصل رد غير متوقع من الخادم.");
-    chatHistory.push({role:"assistant", content:reply});
+
+    if (!reply) {
+      throw new Error("وصل رد غير متوقع من الخادم.");
+    }
+
+    chatHistory.push({
+      role: "assistant",
+      content: reply
+    });
+
     addBubble("assistant", reply);
+
     setStatus("chatStatus", "تم الرد.");
+
   } catch (error) {
-    chatHistory.pop();
+
+    if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === "user") {
+      chatHistory.pop();
+    }
+
     setStatus("chatStatus", "تعذر الحصول على الرد: " + error.message);
+
   } finally {
+
     setBusy(buttonId, false);
+
   }
 }
 
+
+// ANALYZE LESSON
+
 function analyzeLesson() {
+
   const lesson = document.getElementById("lessonText").value.trim();
+
   if (!lesson) {
     setStatus("chatStatus", "الصق الدرس أو ملخص الفيديو أولاً.");
     return;
   }
-  const request = "Please analyze and teach me this lesson. First give me a simple structured explanation of its main ideas, then start testing my understanding by asking only one question at a time.\n\nLESSON:\n" + lesson;
+
+  const request =
+    "Please analyze and teach me this lesson. First give me a simple structured explanation of its main ideas, then start testing my understanding by asking only one question at a time.\n\nLESSON:\n" +
+    lesson;
+
   addBubble("user", "أريد تحليل الدرس وبدء الاختبار.");
+
   askAI(request, "analyzeBtn");
 }
 
+
+// SEND QUESTION
+
 function sendQuestion() {
+
   const input = document.getElementById("questionInput");
   const question = input.value.trim();
+
   if (!question) return;
+
   input.value = "";
+
   addBubble("user", question);
+
   askAI(question, "sendBtn");
 }
 
+
+// ENTER KEY
+
 document.getElementById("questionInput").addEventListener("keydown", function(event) {
-  if (event.key === "Enter") sendQuestion();
+
+  if (event.key === "Enter") {
+    sendQuestion();
+  }
+
 });
 
+
+// LANGUAGE
+
 function toggleLanguage() {
+
   language = language === "ar" ? "en" : "ar";
+
   document.documentElement.lang = language;
+
   document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-  document.getElementById("langBtn").textContent = language === "ar" ? "English" : "العربية";
-  document.getElementById("heroText").textContent = language === "ar"
-    ? "لا تتعلم لتنسى. تعلّم لتتذكر، تفهم، وتتطور كل يوم."
-    : "Don't learn to forget. Learn to remember, understand and grow every day.";
+
+  document.getElementById("langBtn").textContent =
+    language === "ar" ? "English" : "العربية";
+
+  document.getElementById("heroText").textContent =
+    language === "ar"
+      ? "لا تتعلم لتنسى. تعلّم لتتذكر، تفهم، وتتطور كل يوم."
+      : "Don't learn to forget. Learn to remember, understand and grow every day.";
+
 }
+
 </script>
+
 </body>
 </html>
