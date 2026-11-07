@@ -373,7 +373,49 @@ footer {
     <span id="streakLabel">أيام التعلّم</span>
   </div>
 </div>
+<section class="card reveal" id="aiConnection">
+  <h2>✦ AI CONNECTION</h2>
+  <p class="small">
+    Connect your favorite AI provider to KEDIR LEARNFLOW.
+  </p>
 
+  <label>AI Provider</label>
+  <select id="aiProvider">
+    <option value="groq">Groq</option>
+    <option value="gemini">Google Gemini</option>
+    <option value="openrouter">OpenRouter</option>
+    <option value="custom">Custom API</option>
+  </select>
+
+  <label>API Key</label>
+  <input
+    id="apiKey"
+    type="password"
+    placeholder="Enter your API key"
+    autocomplete="off"
+  >
+
+  <label>Model Name</label>
+  <input
+    id="modelName"
+    placeholder="Enter model name"
+  >
+
+  <label>Custom API URL (optional)</label>
+  <input
+    id="customApiUrl"
+    type="url"
+    placeholder="https://api.example.com"
+  >
+
+  <button class="primary" onclick="testAIConnection()">
+    TEST CONNECTION
+  </button>
+
+  <p class="small" id="aiStatus">
+    Backend connection is not configured yet.
+  </p>
+</section>
 <section class="card reveal">
   <h2 id="setupTitle">✦ ابدأ رحلة التعلّم</h2>
   <p class="small" id="setupDescription">أدخل معلومات الدرس لتبدأ جلسة تدريبية تجريبية.</p>
