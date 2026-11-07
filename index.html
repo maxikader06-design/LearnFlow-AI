@@ -1,85 +1,193 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LearnFlow AI</title>
 <style>
-body {
-  margin: 0;
-  padding: 20px;
-  background: #0b1220;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-header {
-  padding: 20px;
-  background: #172741;
-  border-radius: 15px;
-  text-align: center;
-}
-h1 { color: #8b9cff; }
-.card {
-  background: #172741;
-  padding: 20px;
-  margin-top: 18px;
-  border-radius: 15px;
-}
-button {
-  background: #8b9cff;
-  color: #101827;
-  border: 0;
-  padding: 12px 18px;
-  border-radius: 10px;
-  font-weight: bold;
-  cursor: pointer;
-  margin: 5px;
-}
-p { color: #bdc9dd; line-height: 1.7; }
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#0b1220;color:white;font-family:Arial,sans-serif}
+.container{max-width:650px;margin:auto}
+header,.card{background:#172741;padding:22px;border-radius:16px;margin-bottom:18px}
+header{text-align:center}
+h1{color:#8b9cff;margin:8px}
+p{color:#c5cee0;line-height:1.7}
+button,input,select{width:100%;padding:13px;margin-top:10px;border-radius:9px;border:1px solid #40516d;font-size:16px}
+input,select{background:#0b1220;color:white}
+button{background:#7187ff;color:white;border:0;font-weight:bold;cursor:pointer}
+button.secondary{background:#30415f}
+label{display:block;margin-top:16px;color:#dce5ff}
+.result{background:#0b1220;padding:15px;border-radius:10px;margin-top:15px}
+.hidden{display:none}
+.small{font-size:13px;color:#9eabc2}
 </style>
 </head>
 <body>
+<div class="container">
 
 <header>
-  <h1>LearnFlow AI 🧠</h1>
-  <p>مدرّبك الشخصي للتعلّم الذكي</p>
+<h1>LearnFlow AI</h1>
+<p id="subtitle">مدربك الشخصي الذكي للتعلّم</p>
+<button class="secondary" onclick="toggleLanguage()" id="langBtn">English</button>
 </header>
 
 <div class="card">
-  <h2>مرحبًا بك!</h2>
-  <p>تعلّم بذكاء، وليس لساعات أطول.</p>
-  <p>اكتشف نقاط ضعفك، اختبر معلوماتك، وطوّر مستواك كل يوم.</p>
+<h2 id="setupTitle">🎯 إعداد جلسة التعلّم</h2>
+
+<label id="subjectLabel">المادة الدراسية</label>
+<input id="subject" placeholder="مثلاً: Biology">
+
+<label id="lessonLabel">اسم الدرس</label>
+<input id="lesson" placeholder="مثلاً: Reproduction in Birds">
+
+<label id="levelLabel">كيف تقيّم فهمك للدرس؟</label>
+<select id="level">
+<option value="beginner">مبتدئ — لا أفهمه جيداً</option>
+<option value="medium">متوسط — أفهم بعضه</option>
+<option value="good">جيد — أفهم معظمه</option>
+</select>
+
+<button onclick="startLearning()" id="startBtn">ابدأ التعلّم</button>
+<p class="small" id="privacy">سيتم حفظ إعداداتك على هذا الجهاز.</p>
+</div>
+
+<div class="card hidden" id="quizCard">
+<h2 id="quizTitle">🧠 اختبار تحديد المستوى</h2>
+<p id="quizIntro">أجب عن الأسئلة التالية لمعرفة ما تحتاج إلى مراجعته.</p>
+<div id="questions"></div>
+<button onclick="checkAnswers()" id="checkBtn">تحقق من إجاباتي</button>
+<div class="result hidden" id="result"></div>
 </div>
 
 <div class="card">
-  <h2>📚 البطاقات التعليمية</h2>
-  <p id="question">ما المقصود بالاسترجاع النشط؟</p>
-  <button onclick="showAnswer()">اكشف الإجابة</button>
-  <p id="answer" hidden>محاولة تذكّر المعلومات من ذاكرتك دون النظر إلى الكتاب.</p>
+<h2 id="coachTitle">💡 نصيحة التعلّم اليوم</h2>
+<p id="tip">اختبر نفسك قبل إعادة قراءة الدرس. محاولة تذكّر المعلومة تساعدك على اكتشاف ما لم تتقنه بعد.</p>
 </div>
 
-<div class="card">
-  <h2>🎯 اختبر نفسك</h2>
-  <p>ما أفضل طريقة لاختبار فهمك؟</p>
-  <button onclick="check(false)">إعادة قراءة الدرس فقط</button>
-  <button onclick="check(true)">اختبار نفسك دون النظر</button>
-  <p id="result"></p>
-</div>
-
-<div class="card">
-  <h2>🚀 هدفنا القادم</h2>
-  <p>إضافة مساعد ذكاء اصطناعي، ومراجعة متباعدة، وتذكيرات ذكية.</p>
 </div>
 
 <script>
-function showAnswer() {
-  document.getElementById("answer").hidden = false;
+let language="ar";
+
+const translations={
+ar:{
+subtitle:"مدربك الشخصي الذكي للتعلّم",
+lang:"English",
+setup:"🎯 إعداد جلسة التعلّم",
+subject:"المادة الدراسية",
+subjectPlaceholder:"مثلاً: Biology",
+lesson:"اسم الدرس",
+lessonPlaceholder:"مثلاً: Reproduction in Birds",
+level:"كيف تقيّم فهمك للدرس؟",
+levels:["مبتدئ — لا أفهمه جيداً","متوسط — أفهم بعضه","جيد — أفهم معظمه"],
+start:"ابدأ التعلّم",
+privacy:"سيتم حفظ إعداداتك على هذا الجهاز.",
+quiz:"🧠 اختبار تحديد المستوى",
+intro:"أجب عن الأسئلة التالية لمعرفة ما تحتاج إلى مراجعته.",
+check:"تحقق من إجاباتي",
+coach:"💡 نصيحة التعلّم اليوم",
+tip:"اختبر نفسك قبل إعادة قراءة الدرس. محاولة تذكّر المعلومة تساعدك على اكتشاف ما لم تتقنه بعد.",
+questions:[
+{q:"ما العضية المسؤولة عن إنتاج الطاقة في الخلية؟",a:["النواة","الميتوكوندريا","الغشاء الخلوي"],correct:1},
+{q:"ما ناتج عملية البناء الضوئي؟",a:["الجلوكوز والأكسجين","الماء فقط","ثاني أكسيد الكربون"],correct:0},
+{q:"أي جزء يحمل المعلومات الوراثية؟",a:["DNA","الماء","السيتوبلازم"],correct:0}
+],
+empty:"يرجى كتابة المادة واسم الدرس أولاً.",
+score:"نتيجتك",
+outof:"من 3",
+feedback:"راجع الأسئلة التي أخطأت فيها، ثم اختبر نفسك مرة أخرى.",
+saved:"تم حفظ إعدادات جلستك!"
+},
+en:{
+subtitle:"Your personal AI learning coach",
+lang:"العربية",
+setup:"🎯 Set up your learning session",
+subject:"School subject",
+subjectPlaceholder:"Example: Biology",
+lesson:"Lesson name",
+lessonPlaceholder:"Example: Reproduction in Birds",
+level:"How well do you understand this lesson?",
+levels:["Beginner — I don't understand it well","Intermediate — I understand some","Good — I understand most of it"],
+start:"Start learning",
+privacy:"Your settings will be saved on this device.",
+quiz:"🧠 Level assessment",
+intro:"Answer these questions to discover what you need to review.",
+check:"Check my answers",
+coach:"💡 Learning tip of the day",
+tip:"Test yourself before rereading a lesson. Trying to remember helps you discover what you haven't mastered yet.",
+questions:[
+{q:"Which organelle produces energy in a cell?",a:["Nucleus","Mitochondria","Cell membrane"],correct:1},
+{q:"What are the products of photosynthesis?",a:["Glucose and oxygen","Water only","Carbon dioxide"],correct:0},
+{q:"Which molecule carries genetic information?",a:["DNA","Water","Cytoplasm"],correct:0}
+],
+empty:"Please enter your subject and lesson first.",
+score:"Your score",
+outof:"out of 3",
+feedback:"Review the questions you missed, then test yourself again.",
+saved:"Your session settings have been saved!"
 }
-function check(correct) {
-  document.getElementById("result").textContent =
-    correct ? "إجابة صحيحة! أحسنت 🎉" : "حاول مرة أخرى!";
+};
+
+function toggleLanguage(){
+language=language==="ar"?"en":"ar";
+const t=translations[language];
+document.documentElement.lang=language;
+document.documentElement.dir=language==="ar"?"rtl":"ltr";
+document.getElementById("subtitle").textContent=t.subtitle;
+document.getElementById("langBtn").textContent=t.lang;
+document.getElementById("setupTitle").textContent=t.setup;
+document.getElementById("subjectLabel").textContent=t.subject;
+document.getElementById("subject").placeholder=t.subjectPlaceholder;
+document.getElementById("lessonLabel").textContent=t.lesson;
+document.getElementById("lesson").placeholder=t.lessonPlaceholder;
+document.getElementById("levelLabel").textContent=t.level;
+document.getElementById("level").innerHTML=t.levels.map((x,i)=>`<option value="${["beginner","medium","good"][i]}">${x}</option>`).join("");
+document.getElementById("startBtn").textContent=t.start;
+document.getElementById("privacy").textContent=t.privacy;
+document.getElementById("quizTitle").textContent=t.quiz;
+document.getElementById("quizIntro").textContent=t.intro;
+document.getElementById("checkBtn").textContent=t.check;
+document.getElementById("coachTitle").textContent=t.coach;
+document.getElementById("tip").textContent=t.tip;
+if(!document.getElementById("quizCard").classList.contains("hidden")) showQuestions();
+}
+
+function startLearning(){
+const subject=document.getElementById("subject").value.trim();
+const lesson=document.getElementById("lesson").value.trim();
+if(!subject||!lesson){alert(translations[language].empty);return;}
+localStorage.setItem("learnflowSubject",subject);
+localStorage.setItem("learnflowLesson",lesson);
+localStorage.setItem("learnflowLevel",document.getElementById("level").value);
+document.getElementById("quizCard").classList.remove("hidden");
+showQuestions();
+document.getElementById("quizCard").scrollIntoView({behavior:"smooth"});
+}
+
+function showQuestions(){
+const t=translations[language];
+document.getElementById("questions").innerHTML=t.questions.map((q,i)=>`
+<div class="result">
+<strong>${i+1}. ${q.q}</strong>
+${q.a.map((a,j)=>`
+<label><input style="width:auto" type="radio" name="q${i}" value="${j}"> ${a}</label>
+`).join("")}
+</div>`).join("");
+document.getElementById("result").classList.add("hidden");
+}
+
+function checkAnswers(){
+const t=translations[language];
+let score=0;
+t.questions.forEach((q,i)=>{
+const answer=document.querySelector(`input[name="q${i}"]:checked`);
+if(answer&&Number(answer.value)===q.correct)score++;
+});
+const result=document.getElementById("result");
+result.innerHTML=`<h3>${t.score}: ${score} ${t.outof}</h3><p>${t.feedback}</p>`;
+result.classList.remove("hidden");
 }
 </script>
-
 </body>
-  </html>
+</html>
