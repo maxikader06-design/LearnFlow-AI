@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,635 +5,246 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#090909">
 <title>KEDIR LEARNFLOW</title>
-
 <style>
-:root {
-  --yellow: #FFD600;
-  --black: #090909;
-  --card: #151515;
-  --muted: #999999;
-  --white: #ffffff;
-}
-
-* { box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--black);
-  color: var(--white);
-  font-family: Arial, sans-serif;
-  overflow-x: hidden;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background: var(--yellow);
-  filter: blur(130px);
-  opacity: .12;
-  top: 8%;
-  left: -140px;
-  pointer-events: none;
-  animation: glow 7s ease-in-out infinite alternate;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: #ffb700;
-  filter: blur(120px);
-  opacity: .10;
-  bottom: 0;
-  right: -100px;
-  pointer-events: none;
-}
-
-@keyframes glow {
-  from { transform: translate(0,0) scale(.9); }
-  to { transform: translate(70px,50px) scale(1.2); }
-}
-
-.container {
-  width: min(100% - 32px, 850px);
-  margin: auto;
-  position: relative;
-  z-index: 1;
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 23px 0;
-  animation: appear .8s ease both;
-}
-
-.logo {
-  font-size: 19px;
-  font-weight: 900;
-  letter-spacing: 1px;
-}
-
-.logo span { color: var(--yellow); }
-
-.lang {
-  border: 1px solid #383838;
-  background: #171717;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 30px;
-  cursor: pointer;
-}
-
-.hero {
-  text-align: center;
-  padding: 58px 12px 40px;
-  animation: appear 1s ease both;
-}
-
-.orb {
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 28px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff7a5, #FFD600 35%, #d49b00 70%, #533b00);
-  box-shadow: 0 0 35px #ffd60055, 0 0 100px #ffd60022;
-  animation: float 4s ease-in-out infinite, pulse 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-14px); }
-}
-
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 35px #ffd60055, 0 0 100px #ffd60022; }
-  50% { box-shadow: 0 0 55px #ffd60088, 0 0 130px #ffd60033; }
-}
-
-.eyebrow {
-  color: var(--yellow);
-  font-size: 12px;
-  letter-spacing: 3px;
-  font-weight: bold;
-}
-
-h1 {
-  font-size: clamp(35px, 8vw, 58px);
-  margin: 16px 0;
-  font-weight: 900;
-}
-
-h1 span { color: var(--yellow); }
-
-.hero p {
-  color: #aaa;
-  line-height: 1.9;
-  max-width: 520px;
-  margin: auto;
-}
-
-.card {
-  background: linear-gradient(145deg, #191919, #101010);
-  border: 1px solid #292929;
-  border-radius: 20px;
-  padding: 24px;
-  margin-bottom: 18px;
-  box-shadow: 0 12px 35px #00000035;
-  transition: transform .3s ease, border-color .3s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  border-color: #665700;
-}
-
-.card h2 { margin-top: 0; }
-
-label {
-  display: block;
-  margin: 17px 0 8px;
-  color: #ddd;
-  font-size: 14px;
-}
-
-input, select {
-  width: 100%;
-  padding: 15px;
-  background: #090909;
-  color: white;
-  border: 1px solid #363636;
-  border-radius: 11px;
-  font-size: 15px;
-  outline: none;
-  transition: border .25s, box-shadow .25s;
-}
-
-input:focus, select:focus {
-  border-color: var(--yellow);
-  box-shadow: 0 0 0 3px #ffd60018;
-}
-
-button {
-  font-size: 15px;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
-}
-
-button:active { transform: scale(.97); }
-
-.primary {
-  width: 100%;
-  padding: 16px;
-  margin-top: 22px;
-  border-radius: 12px;
-  background: var(--yellow);
-  color: #090909;
-}
-
-.primary:hover {
-  background: #ffe44d;
-  box-shadow: 0 0 25px #ffd60035;
-}
-
-.secondary {
-  background: #252525;
-  color: white;
-  padding: 13px;
-  border-radius: 10px;
-}
-
-.small {
-  color: #777;
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.stat {
-  background: #151515;
-  border: 1px solid #292929;
-  border-radius: 15px;
-  padding: 18px 8px;
-  text-align: center;
-  animation: appear .8s ease both;
-}
-
-.stat strong {
-  display: block;
-  color: var(--yellow);
-  font-size: 23px;
-  margin-bottom: 7px;
-}
-
-.stat span {
-  color: #888;
-  font-size: 11px;
-}
-
-.hidden { display: none !important; }
-
-.question {
-  background: #0c0c0c;
-  padding: 18px;
-  border: 1px solid #292929;
-  border-radius: 13px;
-  margin: 14px 0;
-}
-
-.question label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-}
-
-.question input {
-  width: auto;
-  accent-color: var(--yellow);
-}
-
-.result {
-  background: #24200c;
-  border: 1px solid #6d5a00;
-  padding: 18px;
-  border-radius: 12px;
-  margin-top: 18px;
-  line-height: 1.8;
-}
-
-.progress {
-  height: 7px;
-  background: #292929;
-  border-radius: 20px;
-  overflow: hidden;
-  margin-top: 14px;
-}
-
-.progress span {
-  display: block;
-  width: 0%;
-  height: 100%;
-  background: var(--yellow);
-  border-radius: 20px;
-  transition: width 1s ease;
-}
-
-.tip {
-  border-right: 3px solid var(--yellow);
-  padding-right: 15px;
-  color: #bbb;
-  line-height: 1.9;
-}
-
-footer {
-  text-align: center;
-  padding: 35px 0;
-  color: #666;
-  font-size: 12px;
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity .7s ease, transform .7s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@keyframes appear {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media(max-width: 480px) {
-  .hero { padding-top: 40px; }
-  .card { padding: 19px; }
-  .stats { gap: 7px; }
-  .stat { padding: 14px 5px; }
-}
-
-@media(prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    transition-duration: .01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+:root{--yellow:#FFD600;--black:#090909;--card:#151515;--muted:#999;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--black);color:var(--white);font-family:Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;width:320px;height:320px;border-radius:50%;background:var(--yellow);filter:blur(130px);opacity:.12;top:8%;left:-140px;pointer-events:none}
+body:after{content:"";position:fixed;width:240px;height:240px;border-radius:50%;background:#ffb700;filter:blur(120px);opacity:.1;bottom:0;right:-100px;pointer-events:none}
+.container{width:min(100% - 30px,850px);margin:auto;position:relative;z-index:1}
+nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.logo{font-size:19px;font-weight:900;letter-spacing:1px}.logo span{color:var(--yellow)}
+.lang{border:1px solid #383838;background:#171717;color:#fff;padding:10px 15px;border-radius:30px}
+.hero{text-align:center;padding:45px 12px 35px}
+.orb{width:92px;height:92px;margin:0 auto 25px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7a5,#FFD600 35%,#d49b00 70%,#533b00);box-shadow:0 0 40px #ffd60055,0 0 100px #ffd60022;animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-12px)}}
+.eyebrow{color:var(--yellow);font-size:12px;letter-spacing:3px;font-weight:bold}
+h1{font-size:clamp(34px,8vw,56px);margin:15px 0;font-weight:900}h1 span{color:var(--yellow)}
+.hero p{color:#aaa;line-height:1.9;max-width:540px;margin:auto}
+.card{background:linear-gradient(145deg,#191919,#101010);border:1px solid #292929;border-radius:20px;padding:23px;margin-bottom:18px;box-shadow:0 12px 35px #0005}
+.card h2{margin-top:0}
+label{display:block;margin:16px 0 8px;color:#ddd;font-size:14px}
+input,textarea{width:100%;padding:14px;background:#090909;color:#fff;border:1px solid #363636;border-radius:11px;font-size:15px;outline:none;font-family:inherit}
+textarea{min-height:130px;resize:vertical;line-height:1.7}
+input:focus,textarea:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffd60018}
+button{font-size:15px;font-weight:bold;border:0;cursor:pointer}
+.primary{width:100%;padding:15px;margin-top:18px;border-radius:12px;background:var(--yellow);color:#090909}
+.primary:disabled{opacity:.55;cursor:wait}
+.secondary{background:#252525;color:#fff;padding:11px 14px;border-radius:10px}
+.small{color:#888;font-size:12px;line-height:1.7}
+.status{margin-top:12px;min-height:20px;color:#bbb;font-size:13px;line-height:1.6}
+.chat{background:#0c0c0c;border:1px solid #292929;border-radius:13px;padding:14px;min-height:100px;max-height:420px;overflow-y:auto;margin-top:14px}
+.bubble{padding:12px 14px;border-radius:12px;margin:9px 0;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{background:#28230a;border:1px solid #655500}
+.ai{background:#1b1b1b;border:1px solid #333}
+.hidden{display:none!important}
+footer{text-align:center;padding:30px 0;color:#666;font-size:12px}
+@media(max-width:480px){.hero{padding-top:35px}.card{padding:18px}}
 </style>
 </head>
-
 <body>
 <div class="container">
-
 <nav>
   <div class="logo">KEDIR <span>LEARNFLOW.</span></div>
-  <button class="lang" onclick="toggleLanguage()" id="langBtn">English</button>
+  <button class="lang" id="langBtn" onclick="toggleLanguage()">English</button>
 </nav>
 
 <section class="hero">
   <div class="orb"></div>
-  <div class="eyebrow" id="eyebrow">YOUR PERSONAL LEARNING SYSTEM</div>
+  <div class="eyebrow">YOUR PERSONAL LEARNING SYSTEM</div>
   <h1>KEDIR <span>LEARNFLOW</span></h1>
   <p id="heroText">لا تتعلم لتنسى. تعلّم لتتذكر، تفهم، وتتطور كل يوم.</p>
 </section>
 
-<div class="stats reveal">
-  <div class="stat">
-    <strong id="lessonsCount">0</strong>
-    <span id="lessonsLabel">الدروس</span>
+<section class="card" id="loginCard">
+  <h2>✦ تسجيل الدخول</h2>
+  <p class="small">أدخل كلمة مرور التطبيق التي أعددتها في Cloudflare. لا تضع مفتاح Groq API هنا.</p>
+  <label for="appPassword">كلمة مرور التطبيق</label>
+  <input id="appPassword" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور">
+  <button class="primary" id="loginBtn" onclick="connectAI()">اتصال آمن</button>
+  <p class="status" id="loginStatus">غير متصل حالياً.</p>
+</section>
+
+<section class="card hidden" id="tutorCard">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+    <h2 style="margin:0">✦ مدرّبك الذكي</h2>
+    <button class="secondary" onclick="disconnectAI()">تسجيل الخروج</button>
   </div>
-  <div class="stat">
-    <strong id="reviewsCount">0</strong>
-    <span id="reviewsLabel">المراجعات</span>
+  <p class="small">أرسل ملخص درس أو نص فيديو. سيشرحه لك الذكاء الاصطناعي ثم يختبر فهمك بأسئلة تفاعلية.</p>
+  <label for="lessonText">الدرس أو ملخص الفيديو</label>
+  <textarea id="lessonText" placeholder="الصق هنا نص الدرس أو ملخص الفيديو..."></textarea>
+  <button class="primary" id="analyzeBtn" onclick="analyzeLesson()">حلّل الدرس وابدأ تدريبي</button>
+  <div class="chat" id="chatBox" aria-live="polite">
+    <p class="small" id="welcomeText">ستظهر المحادثة هنا بعد إرسال الدرس أو سؤالك.</p>
   </div>
-  <div class="stat">
-    <strong id="streakCount">0</strong>
-    <span id="streakLabel">أيام التعلّم</span>
-  </div>
-</div>
-<section class="card reveal" id="aiConnection">
-  <h2>✦ AI CONNECTION</h2>
-  <p class="small">
-    Connect your favorite AI provider to KEDIR LEARNFLOW.
-  </p>
-
-  <label>AI Provider</label>
-  <select id="aiProvider">
-    <option value="groq">Groq</option>
-    <option value="gemini">Google Gemini</option>
-    <option value="openrouter">OpenRouter</option>
-    <option value="custom">Custom API</option>
-  </select>
-
-  <label>API Key</label>
-  <input
-    id="apiKey"
-    type="password"
-    placeholder="Enter your API key"
-    autocomplete="off"
-  >
-
-  <label>Model Name</label>
-  <input
-    id="modelName"
-    placeholder="Enter model name"
-  >
-
-  <label>Custom API URL (optional)</label>
-  <input
-    id="customApiUrl"
-    type="url"
-    placeholder="https://api.example.com"
-  >
-
-  <button class="primary" onclick="testAIConnection()">
-    TEST CONNECTION
-  </button>
-
-  <p class="small" id="aiStatus">
-    Backend connection is not configured yet.
-  </p>
-</section>
-<section class="card reveal">
-  <h2 id="setupTitle">✦ ابدأ رحلة التعلّم</h2>
-  <p class="small" id="setupDescription">أدخل معلومات الدرس لتبدأ جلسة تدريبية تجريبية.</p>
-
-  <label id="subjectLabel">المادة الدراسية</label>
-  <input id="subject" placeholder="مثلاً: Biology">
-
-  <label id="lessonLabel">اسم الدرس</label>
-  <input id="lesson" placeholder="مثلاً: Reproduction in Birds">
-
-  <label id="levelLabel">مستوى فهمك</label>
-  <select id="level">
-    <option value="beginner">مبتدئ</option>
-    <option value="medium">متوسط</option>
-    <option value="good">جيد</option>
-  </select>
-
-  <button class="primary" onclick="startLearning()" id="startBtn">ابدأ التعلّم ←</button>
-  <p class="small" id="privacy">إعداداتك تحفظ محلياً على هذا الجهاز.</p>
+  <label for="questionInput">اكتب سؤالك أو إجابتك</label>
+  <input id="questionInput" placeholder="اكتب هنا...">
+  <button class="primary" id="sendBtn" onclick="sendQuestion()">إرسال</button>
+  <p class="status" id="chatStatus"></p>
 </section>
 
-<section class="card reveal hidden" id="quizCard">
-  <h2 id="quizTitle">✦ اختبر معلوماتك</h2>
-  <p class="small" id="quizIntro">أجب عن الأسئلة التالية.</p>
-  <div id="questions"></div>
-  <button class="primary" onclick="checkAnswers()" id="checkBtn">تحقق من إجاباتي</button>
-  <div class="result hidden" id="result"></div>
+<section class="card">
+  <h2>✦ طريقة التعلّم</h2>
+  <p class="small" style="line-height:2">1. سجّل الدخول بكلمة مرور التطبيق.<br>2. الصق الدرس أو ملخص الفيديو.<br>3. اطلب من المدرّب شرحه واختبار فهمك.<br>4. أجب عن الأسئلة واطلب توضيح ما لم تفهمه.</p>
 </section>
 
-<section class="card reveal">
-  <h2 id="tipTitle">✦ عقلية التعلّم</h2>
-  <p class="tip" id="tipText">
-    لا تكتفِ بقراءة المعلومة. أغلق الكتاب وحاول استرجاعها من ذاكرتك.
-    هذه طريقة تساعدك على اكتشاف نقاط ضعفك.
-  </p>
-</section>
-
-<section class="card reveal">
-  <h2 id="progressTitle">✦ رحلتك مستمرة</h2>
-  <p class="small" id="progressText">كل جلسة تعلّم هي خطوة للأمام.</p>
-  <div class="progress"><span id="progressBar"></span></div>
-</section>
-
-<footer>
-  KEDIR LEARNFLOW © 2026
-  <br><br>
-  <span id="footerText">LEARN SMARTER. REMEMBER LONGER.</span>
-</footer>
-
+<footer>KEDIR LEARNFLOW © 2026<br><br>LEARN SMARTER. REMEMBER LONGER.</footer>
 </div>
 
 <script>
+const API_URL = "https://kedir-learnflow-api.maxikader06.workers.dev";
+let sessionToken = sessionStorage.getItem("lfSessionToken") || "";
+let chatHistory = [];
 let language = "ar";
-let lessons = Number(localStorage.getItem("lfLessons") || 0);
-let reviews = Number(localStorage.getItem("lfReviews") || 0);
 
-const data = {
- ar: {
-  eyebrow:"نظامك الشخصي للتعلّم",
-  hero:"لا تتعلم لتنسى. تعلّم لتتذكر، تفهم، وتتطور كل يوم.",
-  lessons:"الدروس", reviews:"المراجعات", streak:"أيام التعلّم",
-  setup:"✦ ابدأ رحلة التعلّم",
-  description:"أدخل معلومات الدرس لتبدأ جلسة تدريبية تجريبية.",
-  subject:"المادة الدراسية", lesson:"اسم الدرس", level:"مستوى فهمك",
-  levels:["مبتدئ","متوسط","جيد"],
-  start:"ابدأ التعلّم ←", privacy:"إعداداتك تحفظ محلياً على هذا الجهاز.",
-  quiz:"✦ اختبر معلوماتك", intro:"أجب عن الأسئلة التالية.",
-  check:"تحقق من إجاباتي", tipTitle:"✦ عقلية التعلّم",
-  tip:"لا تكتفِ بقراءة المعلومة. أغلق الكتاب وحاول استرجاعها من ذاكرتك. هذه طريقة تساعدك على اكتشاف نقاط ضعفك.",
-  progressTitle:"✦ رحلتك مستمرة",
-  progress:"كل جلسة تعلّم هي خطوة للأمام.",
-  footer:"تعلّم بذكاء. تذكّر لمدة أطول.",
-  empty:"يرجى إدخال المادة واسم الدرس أولاً.",
-  score:"نتيجتك", feedback:"أحسنت! راجع إجاباتك وحاول تطوير معرفتك.",
-  questions:[
-   {q:"ما العضية المسؤولة عن إنتاج الطاقة في الخلية؟",a:["النواة","الميتوكوندريا","الغشاء الخلوي"],c:1},
-   {q:"ما ناتج عملية البناء الضوئي؟",a:["الجلوكوز والأكسجين","الماء فقط","ثاني أكسيد الكربون"],c:0},
-   {q:"أي جزيء يحمل المعلومات الوراثية؟",a:["DNA","الماء","السيتوبلازم"],c:0}
-  ]
- },
- en: {
-  eyebrow:"YOUR PERSONAL LEARNING SYSTEM",
-  hero:"Don't learn to forget. Learn to remember, understand and grow every day.",
-  lessons:"Lessons",reviews:"Reviews",streak:"Study days",
-  setup:"✦ Start your learning journey",
-  description:"Enter your lesson details to start a sample practice session.",
-  subject:"School subject",lesson:"Lesson name",level:"Your understanding",
-  levels:["Beginner","Intermediate","Good"],
-  start:"Start learning →",privacy:"Your settings are saved on this device.",
-  quiz:"✦ Test your knowledge",intro:"Answer the following questions.",
-  check:"Check my answers",tipTitle:"✦ Learning mindset",
-  tip:"Don't just read information. Close your book and try to recall it from memory. This helps you discover your weak areas.",
-  progressTitle:"✦ Your journey continues",
-  progress:"Every learning session is a step forward.",
-  footer:"LEARN SMARTER. REMEMBER LONGER.",
-  empty:"Please enter your subject and lesson first.",
-  score:"Your score",feedback:"Well done! Review your answers and keep improving.",
-  questions:[
-   {q:"Which organelle produces energy in a cell?",a:["Nucleus","Mitochondria","Cell membrane"],c:1},
-   {q:"What are the products of photosynthesis?",a:["Glucose and oxygen","Water only","Carbon dioxide"],c:0},
-   {q:"Which molecule carries genetic information?",a:["DNA","Water","Cytoplasm"],c:0}
-  ]
- }
-};
-
-function toggleLanguage(){
- language = language === "ar" ? "en" : "ar";
- const t = data[language];
- document.documentElement.lang = language;
- document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-
- const ids = {
-  eyebrow:t.eyebrow,heroText:t.hero,lessonsLabel:t.lessons,
-  reviewsLabel:t.reviews,streakLabel:t.streak,
-  setupTitle:t.setup,setupDescription:t.description,
-  subjectLabel:t.subject,lessonLabel:t.lesson,
-  levelLabel:t.level,startBtn:t.start,privacy:t.privacy,
-  quizTitle:t.quiz,quizIntro:t.intro,checkBtn:t.check,
-  tipTitle:t.tipTitle,tipText:t.tip,
-  progressTitle:t.progressTitle,progressText:t.progress,
-  footerText:t.footer
- };
-
- Object.entries(ids).forEach(([id,value])=>{
-  document.getElementById(id).textContent=value;
- });
-
- document.getElementById("langBtn").textContent =
-  language === "ar" ? "English" : "العربية";
-
- document.getElementById("level").innerHTML =
-  t.levels.map((x,i)=>`<option value="${["beginner","medium","good"][i]}">${x}</option>`).join("");
-
- if(!document.getElementById("quizCard").classList.contains("hidden")){
-  showQuestions();
- }
+function setStatus(id, message) {
+  document.getElementById(id).textContent = message;
 }
 
-function updateStats(){
- document.getElementById("lessonsCount").textContent = lessons;
- document.getElementById("reviewsCount").textContent = reviews;
- document.getElementById("streakCount").textContent = lessons > 0 ? "1" : "0";
- document.getElementById("progressBar").style.width =
-  Math.min(lessons * 10,100) + "%";
+function addBubble(role, message) {
+  const box = document.getElementById("chatBox");
+  const bubble = document.createElement("div");
+  bubble.className = "bubble " + (role === "user" ? "user" : "ai");
+  bubble.textContent = message;
+  box.appendChild(bubble);
+  box.scrollTop = box.scrollHeight;
 }
 
-function startLearning(){
- const subject = document.getElementById("subject").value.trim();
- const lesson = document.getElementById("lesson").value.trim();
-
- if(!subject || !lesson){
-  alert(data[language].empty);
-  return;
- }
-
- localStorage.setItem("lfSubject",subject);
- localStorage.setItem("lfLesson",lesson);
- localStorage.setItem("lfLevel",document.getElementById("level").value);
-
- lessons++;
- localStorage.setItem("lfLessons",lessons);
-
- updateStats();
-
- const card = document.getElementById("quizCard");
- card.classList.remove("hidden");
- showQuestions();
-
- card.scrollIntoView({behavior:"smooth",block:"start"});
-}
-
-function showQuestions(){
- const t = data[language];
- document.getElementById("questions").innerHTML =
- t.questions.map((q,i)=>`
-  <div class="question">
-   <strong>${i+1}. ${q.q}</strong>
-   ${q.a.map((answer,j)=>`
-    <label>
-     <input type="radio" name="q${i}" value="${j}">
-     ${answer}
-    </label>
-   `).join("")}
-  </div>
- `).join("");
-
- document.getElementById("result").classList.add("hidden");
-}
-
-function checkAnswers(){
- const t = data[language];
- let score = 0;
-
- t.questions.forEach((q,i)=>{
-  const answer = document.querySelector(`input[name="q${i}"]:checked`);
-  if(answer && Number(answer.value) === q.c) score++;
- });
-
- reviews++;
- localStorage.setItem("lfReviews",reviews);
- updateStats();
-
- const result = document.getElementById("result");
- result.innerHTML =
- `<h3>${t.score}: ${score} / 3</h3><p>${t.feedback}</p>`;
- result.classList.remove("hidden");
-}
-
-const observer = new IntersectionObserver(entries=>{
- entries.forEach(entry=>{
-  if(entry.isIntersecting){
-   entry.target.classList.add("visible");
+function setBusy(buttonId, busy, busyText) {
+  const button = document.getElementById(buttonId);
+  button.disabled = busy;
+  if (busy) {
+    button.dataset.oldText = button.textContent;
+    button.textContent = busyText;
+  } else if (button.dataset.oldText) {
+    button.textContent = button.dataset.oldText;
   }
- });
-},{threshold:0.12});
+}
 
-document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+async function connectAI() {
+  const password = document.getElementById("appPassword").value;
+  if (!password.trim()) {
+    setStatus("loginStatus", "أدخل كلمة مرور التطبيق أولاً.");
+    return;
+  }
 
-updateStats();
+  setBusy("loginBtn", true, "جارٍ الاتصال...");
+  setStatus("loginStatus", "جارٍ التحقق من كلمة المرور...");
+
+  try {
+    const response = await fetch(API_URL + "/login", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({password})
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || !(data.token || data.access_token || data.sessionToken)) {
+      throw new Error(data.error || data.message || "تعذر تسجيل الدخول. تحقق من كلمة المرور وإعدادات الخادم.");
+    }
+
+    sessionToken = data.token || data.access_token || data.sessionToken;
+    sessionStorage.setItem("lfSessionToken", sessionToken);
+    document.getElementById("loginCard").classList.add("hidden");
+    document.getElementById("tutorCard").classList.remove("hidden");
+    setStatus("chatStatus", "تم الاتصال. أرسل درسك للبدء.");
+  } catch (error) {
+    setStatus("loginStatus", "فشل الاتصال: " + error.message);
+  } finally {
+    setBusy("loginBtn", false);
+  }
+}
+
+function disconnectAI() {
+  sessionToken = "";
+  chatHistory = [];
+  sessionStorage.removeItem("lfSessionToken");
+  document.getElementById("tutorCard").classList.add("hidden");
+  document.getElementById("loginCard").classList.remove("hidden");
+  document.getElementById("chatBox").innerHTML = '<p class="small">ستظهر المحادثة هنا بعد إرسال الدرس أو سؤالك.</p>';
+  setStatus("loginStatus", "تم تسجيل الخروج من هذا الجهاز.");
+}
+
+async function askAI(userText, buttonId) {
+  if (!sessionToken) {
+    setStatus("chatStatus", "انتهت الجلسة. سجّل الدخول مرة أخرى.");
+    disconnectAI();
+    return;
+  }
+
+  chatHistory.push({role:"user", content:userText});
+  const systemMessage = {
+    role:"system",
+    content:"You are KEDIR LEARNFLOW, a patient personal learning coach. The learner may be a beginner. Explain clearly in the same language the learner uses. When given lesson notes or a video summary, identify the key ideas, explain them simply, then ask one question at a time. Wait for the learner's answer, give kind and accurate feedback, correct misunderstandings, and continue with useful questions. Do not invent facts beyond the supplied lesson; say when something is unclear."
+  };
+
+  setBusy(buttonId, true, "جارٍ التفكير...");
+  setStatus("chatStatus", "يراجع المدرّب رسالتك...");
+
+  try {
+    const response = await fetch(API_URL + "/chat", {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + sessionToken
+      },
+      body:JSON.stringify({messages:[systemMessage, ...chatHistory.slice(-12)]})
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (response.status === 401) {
+      disconnectAI();
+      throw new Error("انتهت الجلسة. سجّل الدخول مرة أخرى.");
+    }
+    if (!response.ok) {
+      throw new Error(data.error || data.message || "حدث خطأ أثناء طلب الإجابة.");
+    }
+    const reply = data.reply || data.message;
+    if (!reply) throw new Error("وصل رد غير متوقع من الخادم.");
+    chatHistory.push({role:"assistant", content:reply});
+    addBubble("assistant", reply);
+    setStatus("chatStatus", "تم الرد.");
+  } catch (error) {
+    chatHistory.pop();
+    setStatus("chatStatus", "تعذر الحصول على الرد: " + error.message);
+  } finally {
+    setBusy(buttonId, false);
+  }
+}
+
+function analyzeLesson() {
+  const lesson = document.getElementById("lessonText").value.trim();
+  if (!lesson) {
+    setStatus("chatStatus", "الصق الدرس أو ملخص الفيديو أولاً.");
+    return;
+  }
+  const request = "Please analyze and teach me this lesson. First give me a simple structured explanation of its main ideas, then start testing my understanding by asking only one question at a time.\n\nLESSON:\n" + lesson;
+  addBubble("user", "أريد تحليل الدرس وبدء الاختبار.");
+  askAI(request, "analyzeBtn");
+}
+
+function sendQuestion() {
+  const input = document.getElementById("questionInput");
+  const question = input.value.trim();
+  if (!question) return;
+  input.value = "";
+  addBubble("user", question);
+  askAI(question, "sendBtn");
+}
+
+document.getElementById("questionInput").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") sendQuestion();
+});
+
+function toggleLanguage() {
+  language = language === "ar" ? "en" : "ar";
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+  document.getElementById("langBtn").textContent = language === "ar" ? "English" : "العربية";
+  document.getElementById("heroText").textContent = language === "ar"
+    ? "لا تتعلم لتنسى. تعلّم لتتذكر، تفهم، وتتطور كل يوم."
+    : "Don't learn to forget. Learn to remember, understand and grow every day.";
+}
 </script>
 </body>
 </html>
