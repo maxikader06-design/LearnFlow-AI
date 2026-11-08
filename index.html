@@ -365,56 +365,79 @@ function setStatus(id, message) {
 
 
   function escapeHTML(text) {
-  return String(text).replace(/[&<>"']/g, function(char) {
-    return {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    }[char];
-  });
+  return String(text).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[char]));
 }
 
 function formatMessage(message) {
-  const lines = escapeHTML(message).split("\n");
+  let text = escapeHTML(message);
 
-  return lines.map(line => {
-    line = line.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    line = line.replace(/\*(.*?)\*/g, "<em>$1</em>");
+  // Remove unnecessary Markdown table separators
+  text = text.replace(/^\s*\|?[\s:|-]+\|?\s*$/gm, "");
 
-    if (line.startsWith("### ")) {
-      return "<h3>" + line.slice(4) + "</h3>";
+  // Convert Markdown tables
+  const lines = text.split("\n");
+  let output = [];
+  let inTable = false;
+
+  for (const line of lines) {
+    if (line.includes("|") && line.trim().startsWith("|")) {
+      const cells = line.split("|").filter(cell => cell.trim() !== "");
+
+      if (!inTable) {
+        output.push('<table class="ai-table">');
+        inTable = true;
+      }
+
+      output.push("<tr>" + cells.map(cell =>
+        "<td>" + cell.trim() + "</td>"
+      ).join("") + "</tr>");
+    } else {
+      if (inTable) {
+        output.push("</table>");
+        inTable = false;
+      }
+
+      let formatted = line;
+      formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      formatted = formatted.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+      if (formatted.startsWith("### ")) {
+        formatted = "<h3>" + formatted.slice(4) + "</h3>";
+      } else if (formatted.startsWith("## ")) {
+        formatted = "<h2>" + formatted.slice(3) + "</h2>";
+      } else if (formatted.startsWith("# ")) {
+        formatted = "<h2>" + formatted.slice(2) + "</h2>";
+      } else if (/^[-•]\s/.test(formatted)) {
+        formatted = "<div>• " + formatted.replace(/^[-•]\s/, "") + "</div>";
+      } else if (/^\d+\.\s/.test(formatted)) {
+        formatted = "<div>" + formatted + "</div>";
+      }
+
+      output.push(formatted || "<br>");
     }
+  }
 
-    if (line.startsWith("## ")) {
-      return "<h2>" + line.slice(3) + "</h2>";
-    }
+  if (inTable) output.push("</table>");
 
-    if (line.startsWith("# ")) {
-      return "<h2>" + line.slice(2) + "</h2>";
-    }
-
-    if (line.trim() === "---") {
-      return "<hr>";
-    }
-
-    if (/^[-•]\s/.test(line)) {
-      return "<div>• " + line.replace(/^[-•]\s/, "") + "</div>";
-    }
-
-    if (/^\d+\.\s/.test(line)) {
-      return "<div>" + line + "</div>";
-    }
-
-    return line || "<br>";
-  }).join("<br>");
+  return output.join("\n");
 }
 
 function addBubble(role, message) {
   const box = document.getElementById("chatBox");
   const bubble = document.createElement("div");
 
+  bubble.className = "bubble " + (role === "user" ? "user" : "ai");
+  bubble.innerHTML = formatMessage(message);
+
+  box.appendChild(bubble);
+  box.scrollTop = box.scrollHeight;
+}
   bubble.className = "bubble " + (role === "user" ? "user" : "ai");
   bubble.innerHTML = formatMessage(message);
 
