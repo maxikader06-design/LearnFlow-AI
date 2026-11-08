@@ -364,16 +364,63 @@ function setStatus(id, message) {
 }
 
 
+  function escapeHTML(text) {
+  return String(text).replace(/[&<>"']/g, function(char) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[char];
+  });
+}
+
+function formatMessage(message) {
+  const lines = escapeHTML(message).split("\n");
+
+  return lines.map(line => {
+    line = line.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    line = line.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+    if (line.startsWith("### ")) {
+      return "<h3>" + line.slice(4) + "</h3>";
+    }
+
+    if (line.startsWith("## ")) {
+      return "<h2>" + line.slice(3) + "</h2>";
+    }
+
+    if (line.startsWith("# ")) {
+      return "<h2>" + line.slice(2) + "</h2>";
+    }
+
+    if (line.trim() === "---") {
+      return "<hr>";
+    }
+
+    if (/^[-•]\s/.test(line)) {
+      return "<div>• " + line.replace(/^[-•]\s/, "") + "</div>";
+    }
+
+    if (/^\d+\.\s/.test(line)) {
+      return "<div>" + line + "</div>";
+    }
+
+    return line || "<br>";
+  }).join("<br>");
+}
+
 function addBubble(role, message) {
   const box = document.getElementById("chatBox");
   const bubble = document.createElement("div");
 
   bubble.className = "bubble " + (role === "user" ? "user" : "ai");
-  bubble.textContent = message;
+  bubble.innerHTML = formatMessage(message);
 
   box.appendChild(bubble);
   box.scrollTop = box.scrollHeight;
-}
+  }
 
 
 function setBusy(buttonId, busy, busyText) {
