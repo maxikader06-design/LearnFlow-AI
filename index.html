@@ -5,687 +5,304 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#090909">
 <title>KEDIR LEARNFLOW</title>
-
 <style>
-:root {
-  --yellow:#FFD600;
-  --black:#090909;
-  --card:#151515;
-  --muted:#999;
-  --white:#fff;
-}
-
-* { box-sizing:border-box; }
-
-body {
-  margin:0;
-  min-height:100vh;
-  background:var(--black);
-  color:var(--white);
-  font-family:Arial,sans-serif;
-  overflow-x:hidden;
-}
-
-body:before {
-  content:"";
-  position:fixed;
-  width:320px;
-  height:320px;
-  border-radius:50%;
-  background:var(--yellow);
-  filter:blur(130px);
-  opacity:.12;
-  top:8%;
-  left:-140px;
-  pointer-events:none;
-}
-
-body:after {
-  content:"";
-  position:fixed;
-  width:240px;
-  height:240px;
-  border-radius:50%;
-  background:#ffb700;
-  filter:blur(120px);
-  opacity:.1;
-  bottom:0;
-  right:-100px;
-  pointer-events:none;
-}
-
-.container {
-  width:min(100% - 30px,850px);
-  margin:auto;
-  position:relative;
-  z-index:1;
-}
-
-nav {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:22px 0;
-}
-
-.logo {
-  font-size:19px;
-  font-weight:900;
-  letter-spacing:1px;
-}
-
-.logo span { color:var(--yellow); }
-
-.lang {
-  border:1px solid #383838;
-  background:#171717;
-  color:#fff;
-  padding:10px 15px;
-  border-radius:30px;
-}
-
-.hero {
-  text-align:center;
-  padding:45px 12px 35px;
-}
-
-.orb {
-  width:92px;
-  height:92px;
-  margin:0 auto 25px;
-  border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#fff7a5,#FFD600 35%,#d49b00 70%,#533b00);
-  box-shadow:0 0 40px #ffd60055,0 0 100px #ffd60022;
-  animation:float 4s ease-in-out infinite;
-}
-
-@keyframes float {
-  50% { transform:translateY(-12px); }
-}
-
-.eyebrow {
-  color:var(--yellow);
-  font-size:12px;
-  letter-spacing:3px;
-  font-weight:bold;
-}
-
-h1 {
-  font-size:clamp(34px,8vw,56px);
-  margin:15px 0;
-  font-weight:900;
-}
-
-h1 span { color:var(--yellow); }
-
-.hero p {
-  color:#aaa;
-  line-height:1.9;
-  max-width:540px;
-  margin:auto;
-}
-
-.card {
-  background:linear-gradient(145deg,#191919,#101010);
-  border:1px solid #292929;
-  border-radius:20px;
-  padding:23px;
-  margin-bottom:18px;
-  box-shadow:0 12px 35px #0005;
-}
-
-.card h2 { margin-top:0; }
-
-label {
-  display:block;
-  margin:16px 0 8px;
-  color:#ddd;
-  font-size:14px;
-}
-
-input,textarea {
-  width:100%;
-  padding:14px;
-  background:#090909;
-  color:#fff;
-  border:1px solid #363636;
-  border-radius:11px;
-  font-size:15px;
-  outline:none;
-  font-family:inherit;
-}
-
-textarea {
-  min-height:130px;
-  resize:vertical;
-  line-height:1.7;
-}
-
-input:focus,textarea:focus {
-  border-color:var(--yellow);
-  box-shadow:0 0 0 3px #ffd60018;
-}
-
-button {
-  font-size:15px;
-  font-weight:bold;
-  border:0;
-  cursor:pointer;
-}
-
-.primary {
-  width:100%;
-  padding:15px;
-  margin-top:18px;
-  border-radius:12px;
-  background:var(--yellow);
-  color:#090909;
-}
-
-.primary:disabled {
-  opacity:.55;
-  cursor:wait;
-}
-
-.secondary {
-  background:#252525;
-  color:#fff;
-  padding:11px 14px;
-  border-radius:10px;
-}
-
-.small {
-  color:#888;
-  font-size:12px;
-  line-height:1.7;
-}
-
-.status {
-  margin-top:12px;
-  min-height:20px;
-  color:#bbb;
-  font-size:13px;
-  line-height:1.6;
-}
-
-.chat {
-  background:#0c0c0c;
-  border:1px solid #292929;
-  border-radius:13px;
-  padding:14px;
-  min-height:100px;
-  max-height:420px;
-  overflow-y:auto;
-  margin-top:14px;
-}
-
-.bubble {
-  padding:12px 14px;
-  border-radius:12px;
-  margin:9px 0;
-  line-height:1.75;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-}
-
-.user {
-  background:#28230a;
-  border:1px solid #655500;
-}
-
-.ai {
-  background:#1b1b1b;
-  border:1px solid #333;
-}
-
-.hidden { display:none!important; }
-
-footer {
-  text-align:center;
-  padding:30px 0;
-  color:#666;
-  font-size:12px;
-}
-
-@media(max-width:480px) {
-  .hero { padding-top:35px; }
-  .card { padding:18px; }
-}
+:root{--bg:#090909;--panel:#111;--panel2:#171717;--yellow:#ffd600;--muted:#aaa;--line:#302b12;--white:#f5f5f5}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% -15%,#302800 0,transparent 38%),var(--bg);color:var(--white);font-family:Arial,Tahoma,sans-serif;min-height:100vh}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.app{width:min(920px,100%);margin:auto;padding:22px 16px 30px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:42px;height:42px;border-radius:13px;background:var(--yellow);color:#090909;display:grid;place-items:center;font-size:23px;font-weight:900;box-shadow:0 0 25px #ffd60040}
+.brand h1{font-size:18px;letter-spacing:1px;margin:0}
+.brand p{font-size:11px;color:var(--muted);margin:4px 0 0}
+.status{font-size:12px;color:#aaa;display:flex;align-items:center;gap:7px}
+.dot{width:8px;height:8px;border-radius:50%;background:#777}
+.dot.on{background:#39d98a;box-shadow:0 0 10px #39d98a}
+.panel{background:#101010;border:1px solid var(--line);border-radius:20px;box-shadow:0 18px 55px #0008}
+.login{max-width:420px;margin:70px auto;padding:28px}
+.login h2{margin:0 0 8px;font-size:23px}
+.login p{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 22px}
+.field{width:100%;padding:14px;border:1px solid #393939;border-radius:12px;background:#090909;color:white;outline:none}
+.field:focus,textarea:focus{border-color:var(--yellow)}
+.primary{border:0;border-radius:12px;background:var(--yellow);color:#090909;font-weight:800;padding:13px 18px}
+.primary:disabled{opacity:.55;cursor:wait}
+.full{width:100%;margin-top:12px}
+.error{color:#ff7777;font-size:13px;min-height:18px;margin-top:10px}
+.hidden{display:none!important}
+.hero{text-align:center;padding:22px 10px 18px}
+.orb{width:66px;height:66px;border-radius:50%;margin:0 auto 15px;background:radial-gradient(circle at 35% 30%,#fff6a5,#ffd600 40%,#9b7900 78%);box-shadow:0 0 35px #ffd60055}
+.hero h2{font-size:25px;margin:0 0 9px}
+.hero p{color:var(--muted);font-size:14px;line-height:1.7;margin:0}
+.workspace{overflow:hidden}
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #292929;gap:10px}
+.toolbar span{font-size:13px;color:#ddd}
+.ghost{background:#1c1c1c;color:#ddd;border:1px solid #333;padding:9px 12px;border-radius:10px;font-size:12px}
+.chat{height:min(52vh,520px);min-height:300px;overflow-y:auto;padding:18px}
+.empty{text-align:center;color:#777;font-size:13px;padding:65px 10px;line-height:1.8}
+.bubble{max-width:90%;padding:13px 15px;border-radius:15px;margin:10px 0;line-height:1.8;overflow-wrap:anywhere;font-size:14px}
+.bubble.user{margin-right:auto;background:#302800;border:1px solid #5b4c00;color:#fff}
+.bubble.ai{margin-left:auto;background:#191919;border:1px solid #333;color:#eee}
+.bubble h2,.bubble h3{color:var(--yellow);margin:15px 0 8px}
+.bubble strong{color:var(--yellow)}
+.bubble ul,.bubble ol{padding-right:22px}
+.bubble li{margin:5px 0}
+.ai-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+.ai-table td{border:1px solid #494000;padding:9px;vertical-align:top}
+.ai-table tr:first-child{background:#302800;color:var(--yellow);font-weight:bold}
+.composer{padding:14px;border-top:1px solid #292929}
+textarea{width:100%;min-height:90px;max-height:200px;resize:vertical;background:#090909;border:1px solid #393939;border-radius:13px;padding:13px;color:white;outline:none;line-height:1.6}
+.composer-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.hint{font-size:11px;color:#888}
+.actions{display:flex;gap:8px}
+.secondary{border:1px solid #3b3b3b;background:#1b1b1b;color:#eee;padding:11px 14px;border-radius:11px}
+.loading{display:inline-flex;gap:5px;align-items:center;color:#bbb}
+.loading i{width:6px;height:6px;background:var(--yellow);border-radius:50%;animation:pulse 1s infinite alternate}
+.loading i:nth-child(2){animation-delay:.2s}.loading i:nth-child(3){animation-delay:.4s}
+@keyframes pulse{to{opacity:.2;transform:translateY(-3px)}}
+footer{text-align:center;color:#666;font-size:11px;margin-top:18px}
+@media(max-width:600px){.app{padding:15px 10px}.brand h1{font-size:15px}.hero h2{font-size:21px}.chat{height:52vh;min-height:280px;padding:12px}.bubble{max-width:96%;font-size:13px}.login{margin:45px auto 0;padding:23px}}
 </style>
 </head>
-
 <body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="logo">L</div>
+      <div><h1>KEDIR LEARNFLOW</h1><p>YOUR PERSONAL AI LEARNING COACH</p></div>
+    </div>
+    <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">غير متصل</span></div>
+  </header>
 
-<div class="container">
+  <section class="panel login" id="loginPanel">
+    <h2>مرحباً بعودتك 👋</h2>
+    <p>سجّل الدخول لبدء جلسة تعلمك مع LearnFlow.</p>
+    <input class="field" id="passwordInput" type="password" placeholder="أدخل كلمة المرور" autocomplete="current-password">
+    <button class="primary full" id="loginButton" onclick="connectAI()">تسجيل الدخول</button>
+    <div class="error" id="loginError"></div>
+  </section>
 
-<nav>
-  <div class="logo">KEDIR <span>LEARNFLOW.</span></div>
-  <button class="lang" id="langBtn" onclick="toggleLanguage()">English</button>
-</nav>
+  <main id="mainPanel" class="hidden">
+    <section class="hero">
+      <div class="orb"></div>
+      <h2>تعلّم بذكاء، خطوة بخطوة.</h2>
+      <p>أرسل درساً أو ملخصاً، وسأشرحه لك ثم أختبر فهمك بسؤال واحد في كل مرة.</p>
+    </section>
 
-<section class="hero">
-  <div class="orb"></div>
-  <div class="eyebrow">YOUR PERSONAL LEARNING SYSTEM</div>
-  <h1>KEDIR <span>LEARNFLOW</span></h1>
-  <p id="heroText">لا تتعلم لتنسى. تعلّم لتتذكر، تفهم، وتتطور كل يوم.</p>
-</section>
-
-<section class="card" id="loginCard">
-  <h2>✦ تسجيل الدخول</h2>
-  <p class="small">
-    أدخل كلمة مرور التطبيق التي أعددتها في Cloudflare.
-    لا تضع مفتاح Groq API هنا.
-  </p>
-
-  <label for="appPassword">كلمة مرور التطبيق</label>
-  <input
-    id="appPassword"
-    type="password"
-    autocomplete="current-password"
-    placeholder="أدخل كلمة المرور"
-  >
-
-  <button class="primary" id="loginBtn" onclick="connectAI()">
-    اتصال آمن
-  </button>
-
-  <p class="status" id="loginStatus">غير متصل حالياً.</p>
-</section>
-
-<section class="card hidden" id="tutorCard">
-
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-    <h2 style="margin:0">✦ مدرّبك الذكي</h2>
-    <button class="secondary" onclick="disconnectAI()">تسجيل الخروج</button>
-  </div>
-
-  <p class="small">
-    أرسل ملخص درس أو نص فيديو. سيشرحه لك الذكاء الاصطناعي
-    ثم يختبر فهمك بأسئلة تفاعلية.
-  </p>
-
-  <label for="lessonText">الدرس أو ملخص الفيديو</label>
-  <textarea
-    id="lessonText"
-    placeholder="الصق هنا نص الدرس أو ملخص الفيديو..."
-  ></textarea>
-
-  <button class="primary" id="analyzeBtn" onclick="analyzeLesson()">
-    حلّل الدرس وابدأ تدريبي
-  </button>
-
-  <div class="chat" id="chatBox" aria-live="polite">
-    <p class="small" id="welcomeText">
-      ستظهر المحادثة هنا بعد إرسال الدرس أو سؤالك.
-    </p>
-  </div>
-
-  <label for="questionInput">اكتب سؤالك أو إجابتك</label>
-  <input id="questionInput" placeholder="اكتب هنا...">
-
-  <button class="primary" id="sendBtn" onclick="sendQuestion()">
-    إرسال
-  </button>
-
-  <p class="status" id="chatStatus"></p>
-</section>
-
-<section class="card">
-  <h2>✦ طريقة التعلّم</h2>
-  <p class="small" style="line-height:2">
-    1. سجّل الدخول بكلمة مرور التطبيق.<br>
-    2. الصق الدرس أو ملخص الفيديو.<br>
-    3. اطلب من المدرّب شرحه واختبار فهمك.<br>
-    4. أجب عن الأسئلة واطلب توضيح ما لم تفهمه.
-  </p>
-</section>
-
-<footer>
-  KEDIR LEARNFLOW © 2026
-  <br><br>
-  LEARN SMARTER. REMEMBER LONGER.
-</footer>
-
+    <section class="panel workspace">
+      <div class="toolbar">
+        <span>✦ جلسة التعلم</span>
+        <button class="ghost" onclick="clearChat()">محادثة جديدة</button>
+      </div>
+      <div class="chat" id="chatBox">
+        <div class="empty" id="emptyState">ابدأ بلصق درس أو اكتب سؤالك هنا.<br>سنتعلم معاً خطوة بخطوة.</div>
+      </div>
+      <div class="composer">
+        <textarea id="messageInput" placeholder="الصق الدرس أو اكتب سؤالك هنا..." onkeydown="handleEnter(event)"></textarea>
+        <div class="composer-bottom">
+          <span class="hint">Enter للإرسال السريع · Shift + Enter لسطر جديد</span>
+          <div class="actions">
+            <button class="secondary" onclick="logout()">خروج</button>
+            <button class="primary" id="sendButton" onclick="askAI()">إرسال ↑</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>© KEDIR LEARNFLOW · Built for focused learning</footer>
 </div>
 
 <script>
-
-"use strict";
-
 const API_URL = "https://kedir-learnflow-api.maxikader06.workers.dev";
-
-let sessionToken = sessionStorage.getItem("lfSessionToken") || "";
+const SYSTEM_MESSAGE = {
+  role: "system",
+  content: `You are KEDIR LEARNFLOW, a patient and excellent personal learning coach.
+Teach in the same language the student uses. If the student writes Arabic, use clear simple Arabic.
+When the student pastes a lesson: understand it, explain the key ideas in an organized and simple way, define difficult terms, give a short summary, then ask ONE question only to check understanding.
+Wait for the student's answer before asking the next question. If the answer is incorrect, explain the misunderstanding kindly and give a small hint before asking again.
+If the student asks a direct question, answer it clearly with examples when useful.
+Use readable headings, bullet points, and simple Markdown tables only when truly useful. Do not output HTML tags or HTML entities. Avoid excessive length.`
+};
 let chatHistory = [];
-let language = "ar";
+let busy = false;
 
-
-function setStatus(id, message) {
-  document.getElementById(id).textContent = message;
+function setStatus(online, text) {
+  document.getElementById("statusDot").classList.toggle("on", online);
+  document.getElementById("statusText").textContent = text;
 }
 
-
-  function escapeHTML(text) {
-  return String(text).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  }[char]));
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  }[c]));
 }
 
 function formatMessage(message) {
-  let text = escapeHTML(message);
+  let safe = escapeHTML(message).replace(/&lt;br\s*\/?&gt;/gi, "<br>");
+  const lines = safe.split("\n");
+  const out = [];
+  let tableOpen = false;
 
-  // Remove unnecessary Markdown table separators
-  text = text.replace(/^\s*\|?[\s:|-]+\|?\s*$/gm, "");
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    const isSeparator = /^\|?[\s:|-]+\|?$/.test(line) && line.includes("-");
+    if (isSeparator) continue;
 
-  // Convert Markdown tables
-  const lines = text.split("\n");
-  let output = [];
-  let inTable = false;
-
-  for (const line of lines) {
-    if (line.includes("|") && line.trim().startsWith("|")) {
-      const cells = line.split("|").filter(cell => cell.trim() !== "");
-
-      if (!inTable) {
-        output.push('<table class="ai-table">');
-        inTable = true;
-      }
-
-      output.push("<tr>" + cells.map(cell =>
-        "<td>" + cell.trim() + "</td>"
-      ).join("") + "</tr>");
-    } else {
-      if (inTable) {
-        output.push("</table>");
-        inTable = false;
-      }
-
-      let formatted = line;
-      formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-      formatted = formatted.replace(/\*(.*?)\*/g, "<em>$1</em>");
-
-      if (formatted.startsWith("### ")) {
-        formatted = "<h3>" + formatted.slice(4) + "</h3>";
-      } else if (formatted.startsWith("## ")) {
-        formatted = "<h2>" + formatted.slice(3) + "</h2>";
-      } else if (formatted.startsWith("# ")) {
-        formatted = "<h2>" + formatted.slice(2) + "</h2>";
-      } else if (/^[-•]\s/.test(formatted)) {
-        formatted = "<div>• " + formatted.replace(/^[-•]\s/, "") + "</div>";
-      } else if (/^\d+\.\s/.test(formatted)) {
-        formatted = "<div>" + formatted + "</div>";
-      }
-
-      output.push(formatted || "<br>");
+    if (line.startsWith("|") && line.includes("|")) {
+      const cells = line.split("|").slice(1, line.endsWith("|") ? -1 : undefined);
+      if (!tableOpen) { out.push('<table class="ai-table">'); tableOpen = true; }
+      out.push("<tr>" + cells.map(cell => "<td>" + inlineFormat(cell.trim()) + "</td>").join("") + "</tr>");
+      continue;
     }
+
+    if (tableOpen) { out.push("</table>"); tableOpen = false; }
+    if (!line) { out.push("<br>"); continue; }
+
+    let formatted = line;
+    if (/^###\s/.test(formatted)) formatted = "<h3>" + inlineFormat(formatted.slice(4)) + "</h3>";
+    else if (/^##\s/.test(formatted)) formatted = "<h2>" + inlineFormat(formatted.slice(3)) + "</h2>";
+    else if (/^#\s/.test(formatted)) formatted = "<h2>" + inlineFormat(formatted.slice(2)) + "</h2>";
+    else if (/^[-*]\s/.test(formatted)) formatted = "<div>• " + inlineFormat(formatted.slice(2)) + "</div>";
+    else if (/^\d+\.\s/.test(formatted)) formatted = "<div>" + inlineFormat(formatted) + "</div>";
+    else formatted = inlineFormat(formatted);
+    out.push(formatted);
   }
 
-  if (inTable) output.push("</table>");
+  if (tableOpen) out.push("</table>");
+  return out.join("\n");
+}
 
-  return output.join("\n");
+function inlineFormat(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.*?)\*/g, "<em>$1</em>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
 }
 
 function addBubble(role, message) {
   const box = document.getElementById("chatBox");
+  const empty = document.getElementById("emptyState");
+  if (empty) empty.remove();
+
   const bubble = document.createElement("div");
-
   bubble.className = "bubble " + (role === "user" ? "user" : "ai");
   bubble.innerHTML = formatMessage(message);
-
   box.appendChild(bubble);
   box.scrollTop = box.scrollHeight;
 }
-  bubble.className = "bubble " + (role === "user" ? "user" : "ai");
-  bubble.innerHTML = formatMessage(message);
 
-  box.appendChild(bubble);
+function showLoading() {
+  const box = document.getElementById("chatBox");
+  const loading = document.createElement("div");
+  loading.id = "loadingBubble";
+  loading.className = "bubble ai";
+  loading.innerHTML = '<span class="loading">يفكر الآن <i></i><i></i><i></i></span>';
+  box.appendChild(loading);
   box.scrollTop = box.scrollHeight;
-  }
-
-
-function setBusy(buttonId, busy, busyText) {
-  const button = document.getElementById(buttonId);
-
-  button.disabled = busy;
-
-  if (busy) {
-    button.dataset.oldText = button.textContent;
-    button.textContent = busyText;
-  } else if (button.dataset.oldText) {
-    button.textContent = button.dataset.oldText;
-  }
 }
-
-
-// LOGIN
+function hideLoading() {
+  const loading = document.getElementById("loadingBubble");
+  if (loading) loading.remove();
+}
 
 async function connectAI() {
+  const password = document.getElementById("passwordInput").value;
+  const error = document.getElementById("loginError");
+  const button = document.getElementById("loginButton");
+  error.textContent = "";
+  if (!password) { error.textContent = "أدخل كلمة المرور أولاً."; return; }
 
-  const password = document.getElementById("appPassword").value;
-
-  if (!password.trim()) {
-    setStatus("loginStatus", "أدخل كلمة مرور التطبيق أولاً.");
-    return;
-  }
-
-  setBusy("loginBtn", true, "جارٍ الاتصال...");
-  setStatus("loginStatus", "جارٍ التحقق من كلمة المرور...");
-
+  button.disabled = true;
+  button.textContent = "جارٍ الاتصال...";
   try {
-
     const response = await fetch(API_URL + "/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ password })
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({password})
     });
-
-    const data = await response.json().catch(() => ({}));
-
-    if (!response.ok || !(data.token || data.access_token || data.sessionToken)) {
-      throw new Error(
-        data.error ||
-        data.message ||
-        "تعذر تسجيل الدخول. تحقق من كلمة المرور وإعدادات الخادم."
-      );
-    }
-
-    sessionToken = data.token || data.access_token || data.sessionToken;
-
-    sessionStorage.setItem("lfSessionToken", sessionToken);
-
-    document.getElementById("loginCard").classList.add("hidden");
-    document.getElementById("tutorCard").classList.remove("hidden");
-
-    setStatus("chatStatus", "تم الاتصال. أرسل درسك للبدء.");
-
-  } catch (error) {
-
-    setStatus("loginStatus", "فشل الاتصال: " + error.message);
-
+    const data = await response.json();
+    if (!response.ok || !data.token) throw new Error(data.error || "تعذر تسجيل الدخول.");
+    sessionStorage.setItem("learnflow_token", data.token);
+    document.getElementById("loginPanel").classList.add("hidden");
+    document.getElementById("mainPanel").classList.remove("hidden");
+    setStatus(true, "متصل");
+  } catch (err) {
+    error.textContent = err.message || "فشل الاتصال. حاول مرة أخرى.";
+    setStatus(false, "غير متصل");
   } finally {
-
-    setBusy("loginBtn", false);
-
+    button.disabled = false;
+    button.textContent = "تسجيل الدخول";
   }
 }
 
+async function askAI() {
+  if (busy) return;
+  const input = document.getElementById("messageInput");
+  const message = input.value.trim();
+  if (!message) return;
 
-// LOGOUT
+  const token = sessionStorage.getItem("learnflow_token");
+  if (!token) { logout(); return; }
 
-function disconnectAI() {
-
-  sessionToken = "";
-  chatHistory = [];
-
-  sessionStorage.removeItem("lfSessionToken");
-
-  document.getElementById("tutorCard").classList.add("hidden");
-  document.getElementById("loginCard").classList.remove("hidden");
-
-  document.getElementById("chatBox").innerHTML =
-    '<p class="small">ستظهر المحادثة هنا بعد إرسال الدرس أو سؤالك.</p>';
-
-  setStatus("loginStatus", "تم تسجيل الخروج من هذا الجهاز.");
-}
-
-
-// AI REQUEST
-
-async function askAI(userText, buttonId) {
-
-  if (!sessionToken) {
-    setStatus("chatStatus", "انتهت الجلسة. سجّل الدخول مرة أخرى.");
-    disconnectAI();
-    return;
-  }
-
-  chatHistory.push({
-    role: "user",
-    content: userText
-  });
-
-  const systemMessage = {
-    role: "system",
-    content: "You are KEDIR LEARNFLOW, a patient personal learning coach. The learner may be a beginner. Explain clearly in the same language the learner uses. When given lesson notes or a video summary, identify the key ideas, explain them simply, then ask one question at a time. Wait for the learner's answer, give kind and accurate feedback, correct misunderstandings, and continue with useful questions. Do not invent facts beyond the supplied lesson; say when something is unclear."
-  };
-
-  setBusy(buttonId, true, "جارٍ التفكير...");
-  setStatus("chatStatus", "يراجع المدرّب رسالتك...");
+  busy = true;
+  document.getElementById("sendButton").disabled = true;
+  input.value = "";
+  addBubble("user", message);
+  chatHistory.push({role:"user", content:message});
+  showLoading();
 
   try {
-
     const response = await fetch(API_URL + "/chat", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + sessionToken
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + token
       },
-      body: JSON.stringify({
-        messages: [systemMessage, ...chatHistory.slice(-12)]
-      })
+      body: JSON.stringify({messages:[SYSTEM_MESSAGE, ...chatHistory]})
     });
-
-    const data = await response.json().catch(() => ({}));
-
-    if (response.status === 401) {
-      disconnectAI();
-      throw new Error("انتهت الجلسة. سجّل الدخول مرة أخرى.");
-    }
-
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error(
-        `${data.error || data.message || "حدث خطأ"} | HTTP: ${data.status || response.status} | Details: ${data.details || "لا توجد تفاصيل"}`
-      );
+      if (response.status === 401) logout();
+      throw new Error(data.error || data.details || "حدث خطأ أثناء طلب الإجابة.");
     }
-
-    // تم إصلاح القوس المفقود هنا
-
-    const reply = data.reply || data.message;
-
-    if (!reply) {
-      throw new Error("وصل رد غير متوقع من الخادم.");
-    }
-
-    chatHistory.push({
-      role: "assistant",
-      content: reply
-    });
-
-    addBubble("assistant", reply);
-
-    setStatus("chatStatus", "تم الرد.");
-
-  } catch (error) {
-
-    if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === "user") {
-      chatHistory.pop();
-    }
-
-    setStatus("chatStatus", "تعذر الحصول على الرد: " + error.message);
-
+    if (!data.reply) throw new Error("وصل رد فارغ من الخادم.");
+    chatHistory.push({role:"assistant", content:data.reply});
+    hideLoading();
+    addBubble("ai", data.reply);
+    setStatus(true, "متصل");
+  } catch (err) {
+    hideLoading();
+    addBubble("ai", "تعذر الحصول على إجابة: " + (err.message || "خطأ في الاتصال") + "\n\nتحقق من اتصال الإنترنت وحاول مرة أخرى.");
+    setStatus(false, "مشكلة اتصال");
   } finally {
-
-    setBusy(buttonId, false);
-
+    busy = false;
+    document.getElementById("sendButton").disabled = false;
+    input.focus();
   }
 }
 
-
-// ANALYZE LESSON
-
-function analyzeLesson() {
-
-  const lesson = document.getElementById("lessonText").value.trim();
-
-  if (!lesson) {
-    setStatus("chatStatus", "الصق الدرس أو ملخص الفيديو أولاً.");
-    return;
+function handleEnter(event) {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    askAI();
   }
-
-  const request =
-    "Please analyze and teach me this lesson. First give me a simple structured explanation of its main ideas, then start testing my understanding by asking only one question at a time.\n\nLESSON:\n" +
-    lesson;
-
-  addBubble("user", "أريد تحليل الدرس وبدء الاختبار.");
-
-  askAI(request, "analyzeBtn");
 }
 
-
-// SEND QUESTION
-
-function sendQuestion() {
-
-  const input = document.getElementById("questionInput");
-  const question = input.value.trim();
-
-  if (!question) return;
-
-  input.value = "";
-
-  addBubble("user", question);
-
-  askAI(question, "sendBtn");
+function clearChat() {
+  chatHistory = [];
+  const box = document.getElementById("chatBox");
+  box.innerHTML = '<div class="empty" id="emptyState">ابدأ بلصق درس أو اكتب سؤالك هنا.<br>سنتعلم معاً خطوة بخطوة.</div>';
 }
 
-
-// ENTER KEY
-
-document.getElementById("questionInput").addEventListener("keydown", function(event) {
-
-  if (event.key === "Enter") {
-    sendQuestion();
-  }
-
-});
-
-
-// LANGUAGE
-
-function toggleLanguage() {
-
-  language = language === "ar" ? "en" : "ar";
-
-  document.documentElement.lang = language;
-
-  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-
-  document.getElementById("langBtn").textContent =
-    language === "ar" ? "English" : "العربية";
-
-  document.getElementById("heroText").textContent =
-    language === "ar"
-      ? "لا تتعلم لتنسى. تعلّم لتتذكر، تفهم، وتتطور كل يوم."
-      : "Don't learn to forget. Learn to remember, understand and grow every day.";
-
+function logout() {
+  sessionStorage.removeItem("learnflow_token");
+  chatHistory = [];
+  document.getElementById("mainPanel").classList.add("hidden");
+  document.getElementById("loginPanel").classList.remove("hidden");
+  document.getElementById("passwordInput").value = "";
+  setStatus(false, "غير متصل");
 }
-
 </script>
-
 </body>
 </html>
