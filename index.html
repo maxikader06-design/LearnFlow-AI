@@ -51,6 +51,16 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
 .ai-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
 .ai-table td{border:1px solid #494000;padding:9px;vertical-align:top}
 .ai-table tr:first-child{background:#302800;color:var(--yellow);font-weight:bold}
+.progress-panel{padding:15px;border-bottom:1px solid #292929;background:#131313}
+.progress-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{background:#1b1b1b;border:1px solid #333;border-radius:12px;padding:12px;text-align:center}
+.stat strong{display:block;color:var(--yellow);font-size:22px;margin-bottom:4px}
+.stat span{font-size:11px;color:#aaa}
+.progress-title{font-size:13px;color:#ddd;margin:14px 0 8px}
+.recent-list{margin:0;padding:0;list-style:none}
+.recent-list li{font-size:12px;color:#bbb;padding:8px 0;border-bottom:1px solid #292929;overflow-wrap:anywhere}
+.recent-list small{color:#777;display:block;margin-top:3px}
+@media(max-width:420px){.progress-grid{grid-template-columns:1fr 1fr}}
 .composer{padding:14px;border-top:1px solid #292929}
 textarea{width:100%;min-height:90px;max-height:200px;resize:vertical;background:#090909;border:1px solid #393939;border-radius:13px;padding:13px;color:white;outline:none;line-height:1.6}
 .composer-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
@@ -93,8 +103,22 @@ footer{text-align:center;color:#666;font-size:11px;margin-top:18px}
     <section class="panel workspace">
       <div class="toolbar">
         <span>✦ جلسة التعلم</span>
-        <button class="ghost" onclick="clearChat()">محادثة جديدة</button>
+        <div class="actions">
+          <button class="ghost" onclick="toggleProgress()">التقدم</button>
+          <button class="ghost" onclick="markLessonComplete()">إنهاء الدرس</button>
+          <button class="ghost" onclick="clearChat()">محادثة جديدة</button>
+        </div>
       </div>
+      <section class="progress-panel hidden" id="progressPanel">
+        <div class="progress-grid">
+          <div class="stat"><strong id="completedCount">0</strong><span>دروس مكتملة</span></div>
+          <div class="stat"><strong id="sessionsCount">0</strong><span>جلسات تعلم</span></div>
+          <div class="stat"><strong id="messagesCount">0</strong><span>رسائل أرسلتها</span></div>
+        </div>
+        <div class="progress-title">آخر ما تعلمته</div>
+        <ul class="recent-list" id="recentLessons"><li>لا توجد دروس بعد.</li></ul>
+        <p class="hint">يُحفظ هذا التقدم على هذا المتصفح والجهاز فقط.</p>
+      </section>
       <div class="chat" id="chatBox">
         <div class="empty" id="emptyState">ابدأ بلصق درس أو اكتب سؤالك هنا.<br>سنتعلم معاً خطوة بخطوة.</div>
       </div>
@@ -126,6 +150,81 @@ Use readable headings, bullet points, and simple Markdown tables only when truly
 };
 let chatHistory = [];
 let busy = false;
+const PROGRESS_KEY = "kedir_learnflow_progress_v1";
+let progress = loadProgress();
+let currentSessionId = null;
+
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "null");
+    if (saved && Array.isArray(saved.lessons)) return saved;
+  } catch (error) {}
+  return {studySessions:0, messagesSent:0, lessons:[]};
+}
+
+function saveProgress() {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress)); }
+  catch (error) { console.warn("Could not save learning progress", error); }
+}
+
+function renderProgress() {
+  document.getElementById("completedCount").textContent =
+    progress.lessons.filter(item => item.completed).length;
+  document.getElementById("sessionsCount").textContent = progress.studySessions;
+  document.getElementById("messagesCount").textContent = progress.messagesSent;
+
+  const list = document.getElementById("recentLessons");
+  list.innerHTML = "";
+  if (!progress.lessons.length) {
+    const item = document.createElement("li");
+    item.textContent = "لا توجد دروس بعد.";
+    list.appendChild(item);
+    return;
+  }
+  progress.lessons.slice(0, 5).forEach(lesson => {
+    const item = document.createElement("li");
+    item.textContent = (lesson.completed ? "✓ " : "• ") + lesson.title;
+    const date = document.createElement("small");
+    date.textContent = lesson.date + (lesson.completed ? " · مكتمل" : " · قيد التعلم");
+    item.appendChild(date);
+    list.appendChild(item);
+  });
+}
+
+function startStudySession(firstMessage) {
+  if (currentSessionId !== null) return;
+  currentSessionId = Date.now();
+  const title = firstMessage.replace(/\s+/g, " ").slice(0, 65) || "درس جديد";
+  progress.studySessions += 1;
+  progress.lessons.unshift({
+    id: currentSessionId,
+    title,
+    date: new Date().toLocaleDateString(),
+    completed: false
+  });
+  progress.lessons = progress.lessons.slice(0, 30);
+  saveProgress();
+  renderProgress();
+}
+
+function toggleProgress() {
+  const panel = document.getElementById("progressPanel");
+  panel.classList.toggle("hidden");
+  renderProgress();
+}
+
+function markLessonComplete() {
+  if (currentSessionId === null) {
+    alert("ابدأ درساً أولاً، ثم اضغط إنهاء الدرس عند الانتهاء.");
+    return;
+  }
+  const lesson = progress.lessons.find(item => item.id === currentSessionId);
+  if (lesson) lesson.completed = true;
+  currentSessionId = null;
+  saveProgress();
+  renderProgress();
+  alert("تم حفظ الدرس ضمن الدروس المكتملة!");
+}
 
 function setStatus(online, text) {
   document.getElementById("statusDot").classList.toggle("on", online);
@@ -248,6 +347,10 @@ async function askAI() {
   busy = true;
   document.getElementById("sendButton").disabled = true;
   input.value = "";
+  startStudySession(message);
+  progress.messagesSent += 1;
+  saveProgress();
+  renderProgress();
   addBubble("user", message);
   chatHistory.push({role:"user", content:message});
   showLoading();
@@ -291,6 +394,7 @@ function handleEnter(event) {
 
 function clearChat() {
   chatHistory = [];
+  currentSessionId = null;
   const box = document.getElementById("chatBox");
   box.innerHTML = '<div class="empty" id="emptyState">ابدأ بلصق درس أو اكتب سؤالك هنا.<br>سنتعلم معاً خطوة بخطوة.</div>';
 }
@@ -298,11 +402,14 @@ function clearChat() {
 function logout() {
   sessionStorage.removeItem("learnflow_token");
   chatHistory = [];
+  currentSessionId = null;
   document.getElementById("mainPanel").classList.add("hidden");
   document.getElementById("loginPanel").classList.remove("hidden");
   document.getElementById("passwordInput").value = "";
   setStatus(false, "غير متصل");
 }
+
+renderProgress();
 </script>
 </body>
 </html>
