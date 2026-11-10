@@ -29,6 +29,15 @@ footer{text-align:center;color:#666;font-size:11px;margin-top:18px}@media(max-wi
 .quiz-option:disabled{opacity:.55;cursor:wait}
 @media(max-width:480px){.quiz-options{grid-template-columns:1fr}}
 
+.review-panel{margin-top:16px;padding-top:14px;border-top:1px solid #292929}
+.review-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.review-head .progress-title{margin:0}
+.review-count{background:var(--yellow);color:#090909;font-weight:800;font-size:11px;border-radius:999px;padding:2px 10px}
+.review-list{margin:0;padding:0;list-style:none}
+.review-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#1b1b1b;border:1px solid #333;border-right:3px solid var(--yellow);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.review-info{min-width:0;font-size:12px;color:#eee;overflow-wrap:anywhere}.review-info small{display:block;color:#aaa;margin-top:3px}
+.review-done{border:0;border-radius:10px;background:var(--yellow);color:#090909;font-weight:800;font-size:12px;padding:8px 11px;white-space:nowrap}.review-done:disabled{opacity:.5;cursor:default}
+.review-empty{font-size:12px;color:#888;padding:4px 0}.review-next{font-size:11px;color:#888;margin:8px 0 0}
+.tab-badge{display:inline-block;min-width:18px;margin-right:6px;padding:1px 6px;border-radius:999px;background:var(--yellow);color:#090909;font-size:10px;font-weight:800}
 </style>
 </head>
 <body>
@@ -38,8 +47,8 @@ footer{text-align:center;color:#666;font-size:11px;margin-top:18px}@media(max-wi
 <main id="mainPanel" class="hidden">
 <section class="hero"><div class="orb"></div><h2>تعلّم بذكاء، خطوة بخطوة.</h2><p>أرسل درساً، افهمه، ثم اختبر نفسك في 5 أسئلة فقط.</p></section>
 <section class="panel workspace">
-<div class="toolbar"><span>✦ جلسة التعلم</span><div class="actions"><button class="ghost" onclick="toggleProgress()">التقدم</button><button class="ghost" onclick="markLessonComplete()">إنهاء الدرس</button><button class="ghost" onclick="clearChat()">محادثة جديدة</button></div></div>
-<section class="progress-panel hidden" id="progressPanel"><div class="progress-grid"><div class="stat"><strong id="completedCount">0</strong><span>دروس مكتملة</span></div><div class="stat"><strong id="sessionsCount">0</strong><span>جلسات تعلم</span></div><div class="stat"><strong id="messagesCount">0</strong><span>رسائل أرسلتها</span></div></div><div class="progress-title">آخر ما تعلمته</div><ul class="recent-list" id="recentLessons"><li>لا توجد دروس بعد.</li></ul><p class="hint">يُحفظ هذا التقدم على هذا المتصفح والجهاز فقط.</p></section>
+<div class="toolbar"><span>✦ جلسة التعلم</span><div class="actions"><button class="ghost" onclick="toggleProgress()">التقدم<span class="tab-badge hidden" id="reviewBadge">0</span></button><button class="ghost" onclick="markLessonComplete()">إنهاء الدرس</button><button class="ghost" onclick="clearChat()">محادثة جديدة</button></div></div>
+<section class="progress-panel hidden" id="progressPanel"><div class="progress-grid"><div class="stat"><strong id="completedCount">0</strong><span>دروس مكتملة</span></div><div class="stat"><strong id="sessionsCount">0</strong><span>جلسات تعلم</span></div><div class="stat"><strong id="messagesCount">0</strong><span>رسائل أرسلتها</span></div></div><div class="progress-title">آخر ما تعلمته</div><ul class="recent-list" id="recentLessons"><li>لا توجد دروس بعد.</li></ul><div class="review-panel"><div class="review-head"><div class="progress-title">مراجعات مستحقة</div><span class="review-count" id="reviewCount">0</span></div><ul class="review-list" id="reviewList"></ul><p class="review-next" id="reviewNext"></p></div><p class="hint">يُحفظ هذا التقدم على هذا المتصفح والجهاز فقط.</p></section>
 <div class="chat" id="chatBox"><div class="empty" id="emptyState">ابدأ بلصق درس أو اكتب سؤالك هنا.<br>سنتعلم معاً خطوة بخطوة.</div></div>
 <div class="quizbar"><p id="quizStatus">بعد شرح الدرس، اضغط لبدء اختبار قصير من 5 أسئلة.</p><button class="primary" id="startQuizButton" onclick="startQuiz()" disabled>ابدأ اختبار 5 أسئلة</button></div>
 <div class="composer"><textarea id="messageInput" placeholder="الصق الدرس أو اكتب سؤالك هنا..." onkeydown="handleEnter(event)"></textarea><div class="composer-bottom"><span class="hint">Enter للإرسال السريع · Shift + Enter لسطر جديد</span><div class="actions"><button class="secondary" onclick="logout()">خروج</button><button class="primary" id="sendButton" onclick="askAI()">إرسال ↑</button></div></div></div>
@@ -56,7 +65,7 @@ function saveProgress(){try{localStorage.setItem(PROGRESS_KEY,JSON.stringify(pro
 function renderProgress(){document.getElementById("completedCount").textContent=progress.lessons.filter(x=>x.completed).length;document.getElementById("sessionsCount").textContent=progress.studySessions;document.getElementById("messagesCount").textContent=progress.messagesSent;const list=document.getElementById("recentLessons");list.innerHTML="";if(!progress.lessons.length){const li=document.createElement("li");li.textContent="لا توجد دروس بعد.";list.appendChild(li);return}progress.lessons.slice(0,5).forEach(x=>{const li=document.createElement("li");li.textContent=(x.completed?"✓ ":"• ")+x.title;const small=document.createElement("small");small.textContent=x.date+(x.completed?" · مكتمل":" · قيد التعلم")+(Number.isFinite(x.quizScore)?" · نتيجة الاختبار: "+x.quizScore+"/100":"");li.appendChild(small);list.appendChild(li)})}
 function startStudySession(msg){if(currentSessionId!==null)return;currentSessionId=Date.now();progress.studySessions++;progress.lessons.unshift({id:currentSessionId,title:msg.replace(/\s+/g," ").slice(0,65)||"درس جديد",date:new Date().toLocaleDateString(),completed:false});progress.lessons=progress.lessons.slice(0,30);saveProgress();renderProgress()}
 function toggleProgress(){document.getElementById("progressPanel").classList.toggle("hidden");renderProgress()}
-function markLessonComplete(){if(currentSessionId===null){alert("ابدأ درساً أولاً، ثم اضغط إنهاء الدرس.");return}const l=progress.lessons.find(x=>x.id===currentSessionId);if(l)l.completed=true;currentSessionId=null;saveProgress();renderProgress();alert("تم حفظ الدرس ضمن الدروس المكتملة!")}
+function markLessonComplete(){if(currentSessionId===null){alert("ابدأ درساً أولاً، ثم اضغط إنهاء الدرس.");return}const l=progress.lessons.find(x=>x.id===currentSessionId);if(l){l.completed=true;scheduleReviews(l)}currentSessionId=null;saveProgress();renderProgress();alert("تم حفظ الدرس ضمن الدروس المكتملة!")}
 function setStatus(on,t){document.getElementById("statusDot").classList.toggle("on",on);document.getElementById("statusText").textContent=t}
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 function inlineFormat(s){return s.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\*(.*?)\*/g,"<em>$1</em>").replace(/`([^`]+)`/g,"<code>$1</code>")}
@@ -77,6 +86,24 @@ async function startQuiz(){if(busy||!lessonReady||quizActive||quizFinished)retur
 function handleEnter(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();askAI()}}
 function clearChat(){chatHistory=[];currentSessionId=null;quizActive=false;quizAnswers=0;quizFinished=false;lessonReady=false;currentQuizQuestion=null;currentQuestionBubble=null;setComposerMode(null);setQuizReady(false);document.getElementById("chatBox").innerHTML='<div class="empty" id="emptyState">ابدأ بلصق درس أو اكتب سؤالك هنا.<br>سنتعلم معاً خطوة بخطوة.</div>'}
 function logout(){sessionStorage.removeItem("learnflow_token");chatHistory=[];currentSessionId=null;quizActive=false;currentQuizQuestion=null;document.getElementById("mainPanel").classList.add("hidden");document.getElementById("loginPanel").classList.remove("hidden");document.getElementById("passwordInput").value="";setComposerMode(null);setStatus(false,"غير متصل")}
+/* ===== نظام المراجعة المتباعدة: 1 · 3 · 5 · 7 · 11 يومًا ===== */
+const REVIEW_KEY="kedir_learnflow_reviews_v1",REVIEW_INTERVALS=[1,3,5,7,11];let reviews=loadReviews();
+function loadReviews(){try{const s=JSON.parse(localStorage.getItem(REVIEW_KEY)||"null");if(s&&Array.isArray(s.items))return s}catch(e){}return{items:[]}}
+function saveReviews(){try{localStorage.setItem(REVIEW_KEY,JSON.stringify(reviews))}catch(e){console.warn("Could not save reviews",e)}}
+function dayKey(d){const p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
+function addDays(base,n){return dayKey(new Date(base.getFullYear(),base.getMonth(),base.getDate()+n))}
+function keyToDate(k){const a=k.split("-").map(Number);return new Date(a[0],a[1]-1,a[2])}
+function scheduleReviews(lesson){if(!lesson||reviews.items.some(x=>x.lessonId===lesson.id))return;const now=new Date();reviews.items.push({lessonId:lesson.id,title:lesson.title,completedOn:dayKey(now),steps:REVIEW_INTERVALS.map(n=>({day:n,due:addDays(now,n),done:false,doneAt:null}))});saveReviews();renderReviews()}
+function dueReviews(){const today=dayKey(new Date()),out=[];reviews.items.forEach(it=>{const s=it.steps.find(x=>!x.done);if(s&&s.due<=today)out.push({item:it,step:s,idx:it.steps.indexOf(s)})});out.sort((a,b)=>a.step.due<b.step.due?-1:a.step.due>b.step.due?1:0);return out}
+function completeReview(lessonId){const it=reviews.items.find(x=>x.lessonId===lessonId);if(!it)return;const today=dayKey(new Date()),stamp=new Date().toISOString();it.steps.forEach(s=>{if(!s.done&&s.due<=today){s.done=true;s.doneAt=stamp}});saveReviews();renderReviews()}
+function renderReviews(){const list=document.getElementById("reviewList");if(!list)return;const due=dueReviews(),today=dayKey(new Date());list.innerHTML="";
+due.forEach(r=>{const li=document.createElement("li");li.className="review-item";const info=document.createElement("div");info.className="review-info";info.textContent=r.item.title;const small=document.createElement("small");const late=Math.round((keyToDate(today)-keyToDate(r.step.due))/864e5);small.textContent="مراجعة اليوم "+r.step.day+" ("+(r.idx+1)+" من "+REVIEW_INTERVALS.length+")"+(late>0?" · متأخرة "+late+" يوم":" · مستحقة اليوم");info.appendChild(small);const btn=document.createElement("button");btn.type="button";btn.className="review-done";btn.textContent="✓ تمت المراجعة";btn.addEventListener("click",()=>{btn.disabled=true;completeReview(r.item.lessonId)});li.appendChild(info);li.appendChild(btn);list.appendChild(li)});
+if(!due.length){const li=document.createElement("li");li.className="review-empty";li.textContent=reviews.items.length?"لا توجد مراجعات مستحقة اليوم 🎉":"ستظهر مراجعاتك هنا بعد أن تضغط «إنهاء الدرس».";list.appendChild(li)}
+document.getElementById("reviewCount").textContent=due.length;const badge=document.getElementById("reviewBadge");if(badge){badge.textContent=due.length;badge.classList.toggle("hidden",!due.length)}
+let up=null;reviews.items.forEach(it=>{const s=it.steps.find(x=>!x.done);if(s&&s.due>today&&(!up||s.due<up.step.due))up={item:it,step:s}});
+document.getElementById("reviewNext").textContent=up?"المراجعة القادمة: "+up.item.title+" · "+keyToDate(up.step.due).toLocaleDateString():""}
+const _renderProgressBase=renderProgress;renderProgress=function(){_renderProgressBase();renderReviews()};
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)renderReviews()});
 renderProgress();
 </script>
 </body></html>
