@@ -198,7 +198,15 @@ async function enablePushNotifications(){
       throw new Error("لم يتم السماح بالإشعارات.");
     }
 
-    const registration=await navigator.serviceWorker.register("./sw.js");
+    const registered=await navigator.serviceWorker.register("./sw.js");
+
+await navigator.serviceWorker.ready;
+
+const registration=await navigator.serviceWorker.getRegistration("./");
+
+if(!registration||!registration.active){
+  throw new Error("لم يتم تفعيل خدمة الإشعارات بعد.");
+}
 
     let subscription=await registration.pushManager.getSubscription();
 
