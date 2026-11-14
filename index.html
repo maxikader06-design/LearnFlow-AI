@@ -47,7 +47,7 @@ footer{text-align:center;color:#666;font-size:11px;margin-top:18px}@media(max-wi
 <main id="mainPanel" class="hidden">
 <section class="hero"><div class="orb"></div><h2>تعلّم بذكاء، خطوة بخطوة.</h2><p>أرسل درساً، افهمه، ثم اختبر نفسك في 5 أسئلة فقط.</p></section>
 <section class="panel workspace">
-<div class="toolbar"><span>✦ جلسة التعلم</span><div class="actions"><button class="ghost" onclick="toggleProgress()">التقدم<span class="tab-badge hidden" id="reviewBadge">0</span></button><button class="ghost" onclick="markLessonComplete()">إنهاء الدرس</button><button class="ghost" onclick="clearChat()">محادثة جديدة</button></div></div>
+<div class="toolbar"><span>✦ جلسة التعلم</span><div class="actions"><button class="ghost" onclick="toggleProgress()">التقدم<span class="tab-badge hidden" id="reviewBadge">0</span></button><button class="ghost" id="enableNotificationsButton" onclick="enablePushNotifications()">تفعيل الإشعارات</button><button class="ghost" onclick="markLessonComplete()">إنهاء الدرس</button><button class="ghost" onclick="clearChat()">محادثة جديدة</button></div></div>
 <section class="progress-panel hidden" id="progressPanel"><div class="progress-grid"><div class="stat"><strong id="completedCount">0</strong><span>دروس مكتملة</span></div><div class="stat"><strong id="sessionsCount">0</strong><span>جلسات تعلم</span></div><div class="stat"><strong id="messagesCount">0</strong><span>رسائل أرسلتها</span></div></div><div class="progress-title">آخر ما تعلمته</div><ul class="recent-list" id="recentLessons"><li>لا توجد دروس بعد.</li></ul><div class="review-panel"><div class="review-head"><div class="progress-title">مراجعات مستحقة</div><span class="review-count" id="reviewCount">0</span></div><ul class="review-list" id="reviewList"></ul><p class="review-next" id="reviewNext"></p></div><p class="hint">يُحفظ هذا التقدم على هذا المتصفح والجهاز فقط.</p></section>
 <div class="chat" id="chatBox"><div class="empty" id="emptyState">ابدأ بلصق درس أو اكتب سؤالك هنا.<br>سنتعلم معاً خطوة بخطوة.</div></div>
 <div class="quizbar"><p id="quizStatus">بعد شرح الدرس، اضغط لبدء اختبار قصير من 5 أسئلة.</p><button class="primary" id="startQuizButton" onclick="startQuiz()" disabled>ابدأ اختبار 5 أسئلة</button></div>
@@ -55,6 +55,7 @@ footer{text-align:center;color:#666;font-size:11px;margin-top:18px}@media(max-wi
 </section></main><footer>© KEDIR LEARNFLOW · Built for focused learning</footer></div>
 <script>
 const API_URL="https://kedir-learnflow-api.maxikader06.workers.dev";
+const VAPID_PUBLIC_KEY="BN9aNcguMowpiCW6Z2NrntM3iOsBIX7B8Ys4whPTjaQvU4rHPMUpHJt3wNRkF4dxOeZlM2T7KDCvundqGRNXoVM";
 const SYSTEM_MESSAGE={role:"system",content:`You are KEDIR LEARNFLOW, a patient and excellent personal learning coach. Teach in the same language the student uses. If the student writes Arabic, use clear simple Arabic. When the student pastes a lesson: explain the key ideas in an organized and simple way, define difficult terms, give a short summary, and DO NOT ask a quiz question yet. Tell the student to press the Start Quiz button. If the student asks a direct question, answer clearly. Use readable headings, bullets, and simple Markdown tables only when useful. Do not output HTML. Keep answers concise.`};
 const QUIZ_FORMAT_INSTRUCTIONS={role:"system",content:`During a quiz, ask exactly five questions based only on the lesson, one at a time, in this order: 1 multiple_choice, 2 true_false, 3 short_answer, 4 fill_blank, 5 applied. For each question output exactly one machine-readable marker: [[QUIZ_QUESTION]]{"type":"multiple_choice","question":"Question text","options":["A","B","C","D"]}[[/QUIZ_QUESTION]]. For true_false provide exactly two options. For short_answer and applied omit options. IMPORTANT: question 5 (applied) must ALWAYS be MEDIUM difficulty: use one simple, familiar everyday situation that directly tests one idea from the lesson. Ask only one clear, short task; require no outside knowledge, calculations, multiple steps, or advanced reasoning. Make it fair and suitable for a beginner who has just studied the lesson. For fill_blank make a sentence with one blank and provide four options. Do not include the correct answer in the JSON. Keep a private tally. Evaluate each answer briefly, then ask only the next question. After question five, give the final score out of 100 and end with [[SCORE:NN]]. Use the student's language. Never ask more than five questions.`};
 let chatHistory=[],busy=false,quizActive=false,quizAnswers=0,quizFinished=false,lessonReady=false;
@@ -73,7 +74,158 @@ function formatMessage(msg){const lines=escapeHTML(msg).split("\n"),out=[];let t
 function addBubble(role,msg){const box=document.getElementById("chatBox"),empty=document.getElementById("emptyState");if(empty)empty.remove();const b=document.createElement("div");b.className="bubble "+(role==="user"?"user":"ai");b.innerHTML=formatMessage(msg);box.appendChild(b);box.scrollTop=box.scrollHeight;return b}
 function showLoading(){const b=document.createElement("div");b.id="loadingBubble";b.className="bubble ai";b.innerHTML='<span class="loading">يفكر الآن <i></i><i></i><i></i></span>';const box=document.getElementById("chatBox");box.appendChild(b);box.scrollTop=box.scrollHeight}
 function hideLoading(){document.getElementById("loadingBubble")?.remove()}
-function connectAI(){const password=document.getElementById("passwordInput").value,error=document.getElementById("loginError"),btn=document.getElementById("loginButton");error.textContent="";if(!password){error.textContent="أدخل كلمة المرور أولاً.";return}btn.disabled=true;btn.textContent="جارٍ الاتصال...";fetch(API_URL+"/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password})}).then(async r=>{const d=await r.json();if(!r.ok||!d.token)throw Error(d.error||"تعذر تسجيل الدخول.");sessionStorage.setItem("learnflow_token",d.token);document.getElementById("loginPanel").classList.add("hidden");document.getElementById("mainPanel").classList.remove("hidden");setStatus(true,"متصل")}).catch(e=>{error.textContent=e.message||"فشل الاتصال.";setStatus(false,"غير متصل")}).finally(()=>{btn.disabled=false;btn.textContent="تسجيل الدخول"})}
+function connectAI(){const password=document.getElementById("passwordInput").value,error=document.getElementById("loginError"),btn=document.getElementById("loginButton");error.textContent="";if(!password){error.textContent="أدخل كلمة المرور أولاً.";return}btn.disabled=true;btn.textContent="جارٍ الاتصال...";fetch(API_URL+"/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password})}).then(async r=>{const d=await r.json();if(!r.ok||!d.token)throw Error(d.error||"تعذر تسجيل الدخول.");sessionStorage.setItem("learnflow_token",d.token);document.getElementById("loginPanel").classList.add("hidden");document.getElementById("mainPanel").classList.remove("hidden");setStatus(true,"متصل");updatePushButton();syncPendingReviews().catch(e=>console.warn("Review sync pending",e));updatePushButton();syncPendingReviews().catch(e=>console.warn("Review sync pending",e));updatePushButton();syncPendingReviews().catch(e=>console.warn("Review sync pending",e))}).catch(e=>{error.textContent=e.message||"فشل الاتصال.";setStatus(false,"غير متصل")}).finally(()=>{btn.disabled=false;btn.textContent="تسجيل الدخول"})}
+// ===== PUSH NOTIFICATIONS AND REVIEW SYNC =====
+
+function urlBase64ToUint8Array(value){
+  const padding="=".repeat((4-value.length%4)%4);
+  const base64=(value+padding).replace(/-/g,"+").replace(/_/g,"/");
+  const raw=atob(base64);
+  return Uint8Array.from(raw,c=>c.charCodeAt(0));
+}
+
+async function apiPost(path,data){
+  const token=sessionStorage.getItem("learnflow_token");
+  if(!token)throw new Error("سجّل الدخول أولاً.");
+
+  const response=await fetch(API_URL+path,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+token
+    },
+    body:JSON.stringify(data)
+  });
+
+  let result={};
+  try{result=await response.json()}catch(e){}
+
+  if(!response.ok){
+    throw new Error(result.error||"تعذر الاتصال بالخادم.");
+  }
+
+  return result;
+}
+
+async function syncLessonReviews(item){
+  if(!item||!sessionStorage.getItem("learnflow_token"))return;
+
+  if(!item.serverSynced){
+    const result=await apiPost("/reviews/schedule",{
+      lessonId:String(item.lessonId),
+      lessonTitle:item.title
+    });
+
+    const rows=Array.isArray(result.reviews)?result.reviews:[];
+
+    if(rows.length<item.steps.length){
+      throw new Error("لم تصل جميع مواعيد المراجعة.");
+    }
+
+    rows.sort((a,b)=>new Date(a.due_at)-new Date(b.due_at));
+
+    item.steps.forEach((step,index)=>{
+      step.serverId=rows[index].id;
+    });
+
+    item.serverSynced=true;
+    saveReviews();
+  }
+
+  for(const step of item.steps){
+    if(step.done&&step.serverId&&!step.serverCompleted){
+      await apiPost("/reviews/complete",{id:step.serverId});
+      step.serverCompleted=true;
+      saveReviews();
+    }
+  }
+}
+
+async function syncPendingReviews(){
+  if(!sessionStorage.getItem("learnflow_token"))return;
+
+  for(const item of reviews.items){
+    await syncLessonReviews(item);
+  }
+}
+
+async function updatePushButton(){
+  const button=document.getElementById("enableNotificationsButton");
+  if(!button)return;
+
+  if(!("serviceWorker" in navigator)||!("PushManager" in window)||!("Notification" in window)){
+    button.disabled=true;
+    button.textContent="الإشعارات غير مدعومة";
+    return;
+  }
+
+  try{
+    const registration=await navigator.serviceWorker.getRegistration("./");
+    const subscription=registration?await registration.pushManager.getSubscription():null;
+
+    if(subscription){
+      button.textContent="مزامنة الإشعارات";
+    }
+  }catch(e){
+    console.warn("Could not check notification status",e);
+  }
+}
+
+async function enablePushNotifications(){
+  const button=document.getElementById("enableNotificationsButton");
+  if(!button)return;
+
+  const oldText=button.textContent;
+  button.disabled=true;
+  button.textContent="جارٍ التفعيل...";
+
+  try{
+    if(!window.isSecureContext){
+      throw new Error("الإشعارات تحتاج إلى اتصال HTTPS آمن.");
+    }
+
+    if(!("serviceWorker" in navigator)||!("PushManager" in window)||!("Notification" in window)){
+      throw new Error("هذا المتصفح لا يدعم إشعارات المواقع.");
+    }
+
+    if(!sessionStorage.getItem("learnflow_token")){
+      throw new Error("سجّل الدخول أولاً.");
+    }
+
+    const permission=await Notification.requestPermission();
+
+    if(permission!=="granted"){
+      throw new Error("لم يتم السماح بالإشعارات.");
+    }
+
+    const registration=await navigator.serviceWorker.register("./sw.js");
+
+    let subscription=await registration.pushManager.getSubscription();
+
+    if(!subscription){
+      subscription=await registration.pushManager.subscribe({
+        userVisibleOnly:true,
+        applicationServerKey:urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+    }
+
+    await apiPost("/push/subscribe",{
+      subscription:subscription.toJSON()
+    });
+
+    await syncPendingReviews();
+
+    button.textContent="الإشعارات مفعّلة";
+    button.disabled=false;
+
+  }catch(error){
+    button.textContent=oldText||"تفعيل الإشعارات";
+    button.disabled=false;
+    alert(error.message||"تعذر تفعيل الإشعارات.");
+  }
+}
+
+// ===== END PUSH NOTIFICATIONS =====
 function setQuizReady(ready){lessonReady=ready;document.getElementById("startQuizButton").disabled=!ready||quizActive||quizFinished;document.getElementById("quizStatus").textContent=quizFinished?"انتهى الاختبار. يمكنك إنهاء الدرس أو بدء محادثة جديدة.":quizActive?"الاختبار جارٍ: السؤال "+Math.min(quizAnswers+1,5)+" من 5.":ready?"شرح الدرس جاهز. ابدأ اختبارك المكوّن من 5 أسئلة.":"بعد شرح الدرس، اضغط لبدء اختبار قصير من 5 أسئلة."}
 function setComposerMode(question){const input=document.getElementById("messageInput"),send=document.getElementById("sendButton");const written=question&&(question.type==="short_answer"||question.type==="applied");input.disabled=!!question&&!written;send.disabled=!!question&&!written;input.placeholder=question?(written?"اكتب إجابتك هنا...":"اختر إجابة من الأزرار أعلاه."):"الصق الدرس أو اكتب سؤالك هنا...";if(!question){input.disabled=false;send.disabled=false}}
 function renderQuizQuestion(q){currentQuizQuestion=q;const box=document.getElementById("chatBox");const b=document.createElement("div");b.className="bubble ai";const heading=document.createElement("div");heading.textContent="السؤال "+(quizAnswers+1)+" من 5";heading.style.color="var(--yellow)";heading.style.fontWeight="bold";heading.style.marginBottom="8px";const question=document.createElement("div");question.textContent=q.question||"أجب عن السؤال التالي.";b.appendChild(heading);b.appendChild(question);box.appendChild(b);currentQuestionBubble=b;const hasOptions=Array.isArray(q.options)&&q.options.length>0;if(hasOptions){const wrap=document.createElement("div");wrap.className="quiz-options";q.options.forEach((option,index)=>{const btn=document.createElement("button");btn.type="button";btn.className="quiz-option";btn.textContent=String(option);btn.addEventListener("click",()=>submitQuizAnswer(String(option),wrap));wrap.appendChild(btn)});b.appendChild(wrap)}else{setComposerMode(q)}box.scrollTop=box.scrollHeight}
@@ -93,9 +245,56 @@ function saveReviews(){try{localStorage.setItem(REVIEW_KEY,JSON.stringify(review
 function dayKey(d){const p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
 function addDays(base,n){return dayKey(new Date(base.getFullYear(),base.getMonth(),base.getDate()+n))}
 function keyToDate(k){const a=k.split("-").map(Number);return new Date(a[0],a[1]-1,a[2])}
-function scheduleReviews(lesson){if(!lesson||reviews.items.some(x=>x.lessonId===lesson.id))return;const now=new Date();reviews.items.push({lessonId:lesson.id,title:lesson.title,completedOn:dayKey(now),steps:REVIEW_INTERVALS.map(n=>({day:n,due:addDays(now,n),done:false,doneAt:null}))});saveReviews();renderReviews()}
+function scheduleReviews(lesson){
+  if(!lesson||reviews.items.some(x=>x.lessonId===lesson.id))return;
+
+  const now=new Date();
+
+  const item={
+    lessonId:lesson.id,
+    title:lesson.title,
+    completedOn:dayKey(now),
+    serverSynced:false,
+    steps:REVIEW_INTERVALS.map(n=>({
+      day:n,
+      due:addDays(now,n),
+      done:false,
+      doneAt:null,
+      serverId:null,
+      serverCompleted:false
+    }))
+  };
+
+  reviews.items.push(item);
+  saveReviews();
+  renderReviews();
+
+  syncLessonReviews(item).catch(
+    e=>console.warn("Could not sync lesson reviews",e)
+  );
+}
 function dueReviews(){const today=dayKey(new Date()),out=[];reviews.items.forEach(it=>{const s=it.steps.find(x=>!x.done);if(s&&s.due<=today)out.push({item:it,step:s,idx:it.steps.indexOf(s)})});out.sort((a,b)=>a.step.due<b.step.due?-1:a.step.due>b.step.due?1:0);return out}
-function completeReview(lessonId){const it=reviews.items.find(x=>x.lessonId===lessonId);if(!it)return;const today=dayKey(new Date()),stamp=new Date().toISOString();it.steps.forEach(s=>{if(!s.done&&s.due<=today){s.done=true;s.doneAt=stamp}});saveReviews();renderReviews()}
+function completeReview(lessonId){
+  const it=reviews.items.find(x=>x.lessonId===lessonId);
+  if(!it)return;
+
+  const today=dayKey(new Date());
+  const stamp=new Date().toISOString();
+
+  it.steps.forEach(s=>{
+    if(!s.done&&s.due<=today){
+      s.done=true;
+      s.doneAt=stamp;
+    }
+  });
+
+  saveReviews();
+  renderReviews();
+
+  syncLessonReviews(it).catch(
+    e=>console.warn("Could not sync completed review",e)
+  );
+}
 function renderReviews(){const list=document.getElementById("reviewList");if(!list)return;const due=dueReviews(),today=dayKey(new Date());list.innerHTML="";
 due.forEach(r=>{const li=document.createElement("li");li.className="review-item";const info=document.createElement("div");info.className="review-info";info.textContent=r.item.title;const small=document.createElement("small");const late=Math.round((keyToDate(today)-keyToDate(r.step.due))/864e5);small.textContent="مراجعة اليوم "+r.step.day+" ("+(r.idx+1)+" من "+REVIEW_INTERVALS.length+")"+(late>0?" · متأخرة "+late+" يوم":" · مستحقة اليوم");info.appendChild(small);const btn=document.createElement("button");btn.type="button";btn.className="review-done";btn.textContent="✓ تمت المراجعة";btn.addEventListener("click",()=>{btn.disabled=true;completeReview(r.item.lessonId)});li.appendChild(info);li.appendChild(btn);list.appendChild(li)});
 if(!due.length){const li=document.createElement("li");li.className="review-empty";li.textContent=reviews.items.length?"لا توجد مراجعات مستحقة اليوم 🎉":"ستظهر مراجعاتك هنا بعد أن تضغط «إنهاء الدرس».";list.appendChild(li)}
